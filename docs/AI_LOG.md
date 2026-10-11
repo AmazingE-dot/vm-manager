@@ -128,3 +128,22 @@ ver `AGENTS.md`, sección 12).
     queda limpia al final.
 - **Intervención de Carlos Eduardo (Intervención humana):**
 - **Prompt clave (opcional):** «Sigue con la siguiente fase».
+
+## Fase 5 — Dashboard
+
+- **Herramienta:** opencode + DeepSeek V4.1 Flash
+- **Delegado a la IA:**
+  - `/` muestra 4 tarjetas de resumen (VMs encendidas, vCPU, RAM y disco en uso) con la suma de
+    los recursos de las VMs `RUNNING`, y tres gráficos Recharts de barras horizontales (vCPU
+    azul, RAM verde, disco naranja) con esquinas redondeadas, sin cuadrícula y tooltip
+    minimalista, siguiendo la sección de diseño de AGENTS.md.
+  - El dashboard reutiliza la query de VMs (mismo cache que `/vms`) y calcula las sumas en una
+    función pura (`summarizeVms`) cubierta por tests.
+  - Estados completos: skeletons de tarjetas y gráficos durante la carga, empty state en dos
+    variantes (sin VMs creadas / sin VMs encendidas) y error con reintentar.
+  - 6 tests nuevos (3 de `summarizeVms` y 3 de `DashboardPage` con Recharts real en jsdom); la
+    suite total queda en 45 tests.
+  - Línea base del bundle para la Fase 7: el build queda en ~891 KB (267 KB gzip) con el aviso de
+    chunks > 500 KB; la optimización se hará en el pulido, como se indicó en AGENTS.md.
+- **Intervención de Carlos Eduardo (Intervención humana):**
+- **Prompt clave (opcional):** «Siguiente fase».

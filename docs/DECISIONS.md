@@ -162,3 +162,28 @@ de la API a sus campos; el resto va a un error general visible sobre el botón.
 
 Se exportó `VmCreateFormInput` (`z.input`) desde `packages/shared` para tipar react-hook-form con
 las coerciones de zod (patrón de tres genéricos del resolver).
+
+## Fase 5 — Dashboard
+
+### D5-1 · El dashboard comparte la query de VMs
+
+`/` usa el mismo `useVms` que `/vms` (un solo cache de TanStack Query) y `summarizeVms` (función
+pura y testeada) calcula las sumas contando solo las VMs `RUNNING`.
+
+### D5-2 · Tres gráficos de barras en lugar de uno combinado
+
+vCPU, RAM y disco tienen unidades distintas; mezclarlas en un único gráfico sería engañoso, así
+que se muestran tres barras horizontales (azul/verde/naranja, esquinas redondeadas, sin
+cuadrícula y tooltip minimalista), una por recurso y ordenadas de mayor a menor.
+
+### D5-3 · Empty states diferenciados
+
+Sin VMs creadas y sin VMs encendidas son situaciones distintas y el mensaje (y la llamada a la
+acción) cambia en consecuencia; ambos casos tienen skeletons equivalentes en la carga y un estado
+de error con reintentar.
+
+### D5-4 · Línea base del bundle para la Fase 7
+
+Con Recharts añadido, el build de producción queda en ~891 KB (267 KB gzip) y Vite avisa de
+chunks > 500 KB. La optimización (React.lazy + manualChunks) se hará en la Fase 7 y se comparará
+contra esta cifra, como pide AGENTS.md.
