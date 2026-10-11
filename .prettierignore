@@ -2,6 +2,7 @@ node_modules
 dist
 coverage
 pnpm-lock.yaml
+**/src/generated/
 
 # Material de Carlos: no reformatear
 AGENTS.md

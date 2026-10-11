@@ -2,10 +2,15 @@ packages:
   - 'apps/*'
   - 'packages/*'
 
-# pnpm >= 10 bloquea por defecto los scripts de instalación de las dependencias.
-# Estos paquetes necesitan ejecutar su postinstall (Prisma descarga engines; esbuild verifica su binario).
-onlyBuiltDependencies:
-  - '@prisma/client'
-  - '@prisma/engines'
-  - esbuild
-  - prisma
+# pnpm 11+ exige aprobar explícitamente los scripts de instalación de dependencias
+# (strictDepBuilds). Prisma y esbuild sí necesitan su postinstall; workerd no se usa.
+allowBuilds:
+  '@prisma/client': true
+  '@prisma/engines': true
+  esbuild: true
+  prisma: true
+  workerd: false
+
+# No enlazamos automáticamente "agent skills" de las dependencias.
+skills:
+  dirs: []
