@@ -193,3 +193,29 @@ ver `AGENTS.md`, sección 12).
     completo (SPA + login + /api/vms + módulos en dev) tras los cambios.
 - **Intervención de Carlos Eduardo (Intervención humana):**
 - **Prompt clave (opcional):** «Pasemos a la fase 7».
+
+## Post-Fase 7 — Ajustes de la revisión de Carlos
+
+- **Herramienta:** opencode + DeepSeek V4.1 Flash
+- **Delegado a la IA:**
+  - Mensajes de validación en inglés: al vaciar un input numérico zod mostraba
+    "Invalid input: expected number, received NaN". Se añadieron mensajes base en español a los
+    esquemas compartidos (`Introduce un número`, `El nombre es obligatorio`, enums y contraseña) y
+    un test que los fija.
+  - El formulario de crear/editar VM ahora es una **ventana modal** sobre el listado, con
+    transición de entrada/salida (backdrop con blur, panel con escala/desplazamiento, 200/180 ms,
+    respeta `prefers-reduced-motion`), cierre con Escape, clic en el fondo y botón X; las rutas
+    `/vms/new` y `/vms/:id/edit` se mantienen (guard de ADMIN incluido) y el listado queda visible
+    detrás. `ConfirmDialog` se refactorizó sobre el mismo componente `Modal` y también anima la
+    salida al cancelar.
+  - Cursores: Tailwind v4 no pone `pointer` en los botones (se restauró globalmente para botones y
+    `role="button"`) y los controles deshabilitados ahora muestran `cursor-not-allowed` en lugar de
+    bloquear el puntero (incluido el enlace de editar en VMs pendientes).
+  - 4 tests nuevos (3 del modal — incluida la validación en español — y los mensajes de esquema);
+    suite total: 58 tests. Build sin advertencias (25 chunks, el mayor 312 KB).
+- **Intervención de Carlos Eduardo (Intervención humana):**
+- **Prompt clave (opcional):** «Hay algunos fallos, cuando quito del input vCPU se ve el siguiente
+  texto: nvalid input: expected number, received NaN, eso pasa con más inputs, al darle crear VM,
+  me gustaría que funcionara más como una ventana modal con su respectiva transición, cuando paso
+  el mouse sobre algunos botones no se ve bien el cursor pointer, cuando voy a crear una VM y se
+  desactiva el botón por falta de datos debería aparecer el cursor-blocked de tailwind.»

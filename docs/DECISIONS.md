@@ -242,3 +242,25 @@ zonas táctiles de 44 px, contraste AA, `prefers-reduced-motion`) ya venía de f
 `README.md` con la guía paso a paso, credenciales, diagrama (Mermaid), decisiones resumidas,
 estructura de carpetas y la bitácora de IA completa (tomada de `docs/AI_LOG.md`).
 `docs/architecture.md` contiene el diagrama Cliente <-> API <-> WebSocket.
+
+## Post-Fase 7 — Ajustes de la revisión de Carlos
+
+### D8-1 · El formulario de VM es un modal sobre el listado
+
+Se mantienen las rutas `/vms/new` y `/vms/:id/edit` (y el guard de ADMIN), pero renderizan el
+listado con el formulario como modal encima (`VmFormModal`) en vez de una página completa. El
+cierre (Cancelar, X, Escape o clic en el fondo) anima la salida (~180 ms) y navega a `/vms`. El
+componente genérico `Modal` (backdrop con blur y transición de entrada/salida) lo comparten el
+formulario y el `ConfirmDialog`.
+
+### D8-2 · Mensajes de zod en español también para el tipo base
+
+Los errores de tipo (`NaN`, campos ausentes) ahora tienen mensaje propio en español en los
+esquemas compartidos (`Introduce un número`, `El nombre es obligatorio`, …), además de los
+mensajes de rango/forma que ya existían.
+
+### D8-3 · Cursores de la UI
+
+Tailwind v4 usa el cursor por defecto del navegador en botones; se restauró `pointer` globalmente
+para controles habilitados y los deshabilitados muestran `not-allowed` (antes bloqueaban el
+puntero con `pointer-events-none`, así que no se veía ningún cursor).
