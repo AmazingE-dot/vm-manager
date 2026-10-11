@@ -174,3 +174,22 @@ ver `AGENTS.md`, sección 12).
   - Bundle tras la fase: 933 KB (281 KB gzip); sigue pendiente la optimización de la Fase 7.
 - **Intervención de Carlos Eduardo (Intervención humana):**
 - **Prompt clave (opcional):** «vamos con el siguiente paso».
+
+## Fase 7 — Pulido y documentación
+
+- **Herramienta:** opencode + DeepSeek V4.1 Flash
+- **Delegado a la IA:**
+  - Optimización de bundle: páginas con `React.lazy` + `Suspense` (fallback de skeletons) y
+    separación de dependencias por grupos de `codeSplitting` (Rolldown, la API vigente en Vite 8)
+    en `vite.config.ts`. Antes: un único chunk de 933 KB (281 KB gzip) con aviso de Vite.
+    Después: 24 chunks, el mayor de 312 KB (98 KB gzip), páginas de 2–9 KB y Recharts
+    descargándose solo al abrir el Dashboard; el aviso desaparece.
+  - Accesibilidad: enlace "Saltar al contenido", landmark `main` también en el login y título de
+    documento por página (`useDocumentTitle`).
+  - `README.md` completo (guía paso a paso, credenciales, diagrama, decisiones resumidas,
+    estructura de carpetas y la bitácora de IA) y `docs/architecture.md` con el diagrama Mermaid
+    Cliente <-> API <-> WebSocket.
+  - Verificación final: lint, typecheck, 54 tests, format y build en verde; smoke con el stack
+    completo (SPA + login + /api/vms + módulos en dev) tras los cambios.
+- **Intervención de Carlos Eduardo (Intervención humana):**
+- **Prompt clave (opcional):** «Pasemos a la fase 7».

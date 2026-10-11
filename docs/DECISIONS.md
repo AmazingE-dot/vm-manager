@@ -186,7 +186,7 @@ de error con reintentar.
 
 Con Recharts añadido, el build de producción queda en ~891 KB (267 KB gzip) y Vite avisa de
 chunks > 500 KB. La optimización (React.lazy + manualChunks) se hará en la Fase 7 y se comparará
-contra esta cifra, como pide AGENTS.md.
+contra esta cifra, como pide AGENTS.md. Resultado final en D7-1.
 
 ## Fase 6 — Realtime
 
@@ -214,3 +214,31 @@ caso de carrera en el que el evento llegue antes que la respuesta HTTP.
 
 El pulso de ~1.5 s es una animación CSS de borde/fondo (curva suave) con temporizador por id en un
 store Zustand; la regla global de `prefers-reduced-motion` la desactiva cuando el usuario lo pide.
+
+## Fase 7 — Pulido y documentación
+
+### D7-1 · Code splitting con `React.lazy` y grupos de `codeSplitting`
+
+Las páginas se cargan con `React.lazy` + `Suspense` (fallback con skeletons) y las dependencias
+pesadas se separan en chunks propios. Vite 8 usa Rolldown, así que la configuración vigente es
+`build.rolldownOptions.output.codeSplitting.groups` (la API `manualChunks` de Rollup está
+deprecada en esta versión; AGENTS.md la menciona de forma genérica). Resultado del build:
+
+|     | Antes                                           | Después                                                                                                                                        |
+| --- | ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| JS  | 1 chunk de 933 KB (281 KB gzip) + aviso de Vite | 24 chunks; el mayor `vendor-react` 312 KB (98 KB gzip); páginas de 2–9 KB; `vendor-charts` (Recharts) solo se descarga al visitar el Dashboard |
+| CSS | 22 KB (5 KB gzip)                               | 23 KB (5 KB gzip)                                                                                                                              |
+
+La advertencia de chunks > 500 KB ya no aparece.
+
+### D7-2 · Accesibilidad del pulido
+
+Enlace "Saltar al contenido" con foco visible, landmark `<main>` también en el login y título de
+documento por página (`useDocumentTitle`). El resto de la base accesible (foco visible, `aria`,
+zonas táctiles de 44 px, contraste AA, `prefers-reduced-motion`) ya venía de fases anteriores.
+
+### D7-3 · README y diagrama de arquitectura
+
+`README.md` con la guía paso a paso, credenciales, diagrama (Mermaid), decisiones resumidas,
+estructura de carpetas y la bitácora de IA completa (tomada de `docs/AI_LOG.md`).
+`docs/architecture.md` contiene el diagrama Cliente <-> API <-> WebSocket.
