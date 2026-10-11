@@ -503,3 +503,27 @@ completa él):
     opacidad a opacidad completa, para cumplir contraste AA en claro y oscuro.
 - **Intervención de Carlos Eduardo (Intervención humana):**
 - **Prompt clave (opcional):** «No se ve bien el Buscar por nombre... en el modo light».
+
+### Splash de marca — logo que se llena de color
+
+- **Herramienta:** opencode + DeepSeek V4.1 Flash
+- **Delegado a la IA:**
+  - Componente `SplashScreen` en `components/`: dos capas apiladas del logo (base en escala de
+    grises al 18 % de opacidad — única excepción permitida a la regla de no filtrar el logo — y
+    superior a color revelada con `clip-path: inset(0 100% 0 0)` → `inset(0 0 0 0)` en 1.3 s con
+    la curva de la casa); tras el relleno queda un pulso de opacidad muy sutil. Variante clara y
+    oscura con los dos webp.
+  - Lógica anti-parpadeo en `useSplashVisibility` (mismo archivo): el contenedor existe desde el
+    inicio (accesible con `role="status"` y `aria-label="Cargando"`) pero permanece invisible los
+    primeros 300 ms; si la sesión se resuelve antes, nunca se ve; si se muestra, se mantiene al
+    menos 1.3 s y sale con un fade de 200 ms.
+  - `ProtectedRoute` usa el componente durante la restauración de sesión (`GET /me`) y el fallback
+    de Suspense de `/login` también; se eliminó el spinner genérico.
+  - `prefers-reduced-motion`: el logo se muestra a color y estático, sin animación de relleno.
+  - Splash mínimo inline en `index.html` (punto opcional del bloque) para que no haya pantalla en
+    blanco antes de que React monte; React lo reemplaza al renderizar.
+  - 3 tests del componente (role/aria, las dos capas por tema y el estado invisible previo al
+    retraso), sin tocar el resto de tests; suite total: 62 tests.
+- **Intervención de Carlos Eduardo (Intervención humana):**
+- **Prompt clave (opcional):** «Lee AGENTS.md, sección 9, bloque "Pantalla de carga (splash) de
+  marca". Tarea: implementar el SplashScreen con el efecto de logo llenándose de color.»
