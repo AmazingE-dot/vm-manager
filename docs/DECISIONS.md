@@ -264,3 +264,26 @@ mensajes de rango/forma que ya existían.
 Tailwind v4 usa el cursor por defecto del navegador en botones; se restauró `pointer` globalmente
 para controles habilitados y los deshabilitados muestran `not-allowed` (antes bloqueaban el
 puntero con `pointer-events-none`, así que no se veía ningún cursor).
+
+## Marca IFX — nombre y sistema de diseño
+
+### D9-1 · Tokens de marca
+
+`--accent` pasa al azul IFX (#0038E8 / #3D6BFF) y se añaden `--accent-violet` y `--accent-cyan`
+(mapeados en Tailwind) más `--brand-gradient`, que solo se usa como halo difuminado en el login
+(clase `.brand-halo`). La semántica de estados no cambia (verde encendida, gris apagada, rojo
+destructivo; el cian no indica estados).
+
+### D9-2 · Logo y favicon por tema
+
+Login y barra superior muestran `ifx-logo.webp` o `ifx-logo-dark.webp` según el tema activo (dos
+`<img>` con `dark:`), sin recolorear ni estirar (solo altura). El favicon usa `ifx-mark.webp`.
+
+### D9-3 · Colores de los gráficos
+
+Dashboard: vCPU = `--accent` (azul IFX), RAM = `--accent-violet`, disco = `--accent-cyan`.
+
+### D9-4 · Nombre de la aplicación
+
+"IFX VM Manager" en la pestaña (`index.html`), los títulos de página (`useDocumentTitle`) y el
+README.

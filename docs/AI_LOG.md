@@ -219,3 +219,25 @@ ver `AGENTS.md`, sección 12).
   me gustaría que funcionara más como una ventana modal con su respectiva transición, cuando paso
   el mouse sobre algunos botones no se ve bien el cursor pointer, cuando voy a crear una VM y se
   desactiva el botón por falta de datos debería aparecer el cursor-blocked de tailwind.»
+
+## Marca IFX — nombre y sistema de diseño
+
+- **Herramienta:** opencode + DeepSeek V4.1 Flash
+- **Delegado a la IA:**
+  - Tokens: `--accent` pasa al azul IFX (#0038E8 en claro / #3D6BFF en oscuro) y se añaden
+    `--accent-violet`, `--accent-cyan` y `--brand-gradient`, mapeados a Tailwind (`@theme inline`).
+  - Logo por tema (`ifx-logo.webp` / `ifx-logo-dark.webp`, según la clase `.dark`) en la pantalla
+    de login y la barra superior, mostrado solo por altura (sin recolorear ni estirar); favicon con
+    `ifx-mark.webp`.
+  - El degradado de marca aparece únicamente como halo difuminado y sutil en el login.
+  - Gráficos del dashboard: vCPU = azul IFX, RAM = violeta, disco = cian (semántica de estados
+    intacta: verde encendida, gris apagada, rojo destructivo).
+  - Nombre "IFX VM Manager" en el título de la pestaña, los títulos de página y el README.
+  - Auditoría de colores: no quedaban azules del esquema anterior hardcodeados fuera de los tokens
+    de `styles/index.css` (se reemplazaron ambos).
+  - Verificación: lint, typecheck, 59 tests, format y build en verde (el build copia
+    `public/brand/` y el favicon queda referenciado).
+- **Intervención de Carlos Eduardo (Intervención humana):**
+- **Prompt clave (opcional):** «Lee AGENTS.md, sección 9, bloque "Identidad de marca (IFX)", y la
+  tabla de tokens actualizada. Los logos ya están en apps/web/public/brand/. Tarea: aplicar la
+  identidad de marca.» (y «Cambia el nombre de la página por IFX VM Manager»).
