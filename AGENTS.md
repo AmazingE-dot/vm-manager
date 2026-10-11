@@ -155,8 +155,68 @@ Formato de error uniforme: `{ "error": { "code": "VALIDATION_ERROR", "message": 
 **Dark mode nativo**
 - Tailwind `darkMode: 'class'`, respeta `prefers-color-scheme` en la primera visita, preferencia persistida (guardar el tema en `localStorage` es aceptable; el token no). Script inline en `index.html` para evitar parpadeo al cargar. Paleta con tokens/variables CSS, no colores sueltos.
 
-**Estética**
-- Aspecto premium y limpio: jerarquía tipográfica clara, espaciado consistente, bordes y sombras sutiles, transiciones suaves, estados hover/focus/disabled cuidados, accesibilidad básica (foco visible, contraste, labels, `aria` en toasts y diálogos). Confirmación en diálogo antes de eliminar.
+**Estética y sistema de diseño (inspirado en Apple Human Interface Guidelines)**
+
+Objetivo: interfaz limpia, con mucho aire, jerarquía tipográfica clara y movimiento sutil. Es una inspiración de lenguaje visual; no uses logos, íconos ni assets de Apple.
+
+*Principios*
+- Claridad, deferencia y profundidad: el contenido manda, la UI no compite con él.
+- Mucho espacio en blanco. Una sola acción primaria por pantalla.
+- Nada de bordes gruesos ni colores saturados de fondo; la jerarquía se logra con tipografía, espaciado y capas.
+
+*Tipografía*
+- Familia: `-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", Inter, "Segoe UI", system-ui, sans-serif`. No incluyas ni cargues SF Pro (no es de uso libre en web); en Windows el fallback será Inter o la fuente del sistema.
+- Títulos grandes y con peso `600`, `letter-spacing` ligeramente negativo (-0.02em); texto de apoyo en gris secundario.
+- Escala sugerida: 34 (título de página) / 22 (sección) / 17 (cuerpo) / 15 (secundario) / 13 (caption). Interlineado 1.4–1.5 en cuerpo.
+
+*Tokens de color (definir como variables CSS y mapearlos en Tailwind; no usar colores sueltos)*
+
+| Token | Light | Dark |
+|---|---|---|
+| `--bg` | `#F5F5F7` | `#000000` |
+| `--surface` | `#FFFFFF` | `#1C1C1E` |
+| `--surface-2` | `#F2F2F7` | `#2C2C2E` |
+| `--text` | `#1D1D1F` | `#F5F5F7` |
+| `--text-secondary` | `#6E6E73` | `#98989D` |
+| `--separator` | `rgba(60,60,67,0.18)` | `rgba(84,84,88,0.65)` |
+| `--accent` (azul) | `#007AFF` | `#0A84FF` |
+| `--success` (verde) | `#34C759` | `#30D158` |
+| `--warning` (naranja) | `#FF9F0A` | `#FF9F0A` |
+| `--danger` (rojo) | `#FF3B30` | `#FF453A` |
+
+- Un solo color de acento (azul). Verde = VM encendida, gris = apagada, rojo solo para acciones destructivas y errores.
+- Fondo de página distinto al de las tarjetas para dar profundidad (`--bg` vs `--surface`).
+
+*Formas, sombras y capas*
+- Radios: tarjetas 16–20px, botones e inputs 10–12px, chips/badges totalmente redondeados. Usar siempre los mismos valores.
+- Sombras muy suaves y difusas (por ejemplo `0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06)`); en dark mode casi sin sombra, separar con borde fino `--separator`.
+- Barra superior/lateral con efecto vidrio esmerilado: `backdrop-filter: saturate(180%) blur(20px)` sobre fondo semitransparente. Debe haber fallback sólido si `backdrop-filter` no está disponible.
+- Bordes de 1px con `--separator`; evitar bordes oscuros o gruesos.
+
+*Componentes*
+- Botón primario: relleno azul, texto blanco, sin sombra fuerte, altura mínima 44px (zona táctil). Secundario: fondo `--surface-2`. Destructivo: texto/relleno rojo, siempre con diálogo de confirmación.
+- Inputs: fondo `--surface-2`, sin borde visible en reposo, anillo de foco azul de 3–4px con baja opacidad; error con texto rojo debajo del campo.
+- Filtro de estado (Todas / Encendidas / Apagadas) como **segmented control** estilo iOS.
+- Badges de estado tipo "pill" con punto de color y texto.
+- Interruptor de encender/apagar como **toggle estilo iOS**.
+- Diálogos y confirmaciones como hoja centrada con fondo oscurecido y blur, esquinas 20px.
+- Listado en tarjetas con espaciado generoso; tabla solo si aporta, con filas altas y separadores finos, sin cebra.
+- Toasts discretos, arriba o abajo al centro, con esquinas redondeadas y fondo translúcido.
+- Gráficos: sin cuadrículas pesadas, colores del sistema (azul, verde, naranja), barras/anillos con esquinas redondeadas, tooltips minimalistas.
+
+*Movimiento*
+- Transiciones de 150–250 ms con curva `cubic-bezier(0.2, 0.8, 0.2, 1)`; evitar rebotes exagerados.
+- Hover con elevación o cambio de fondo leve; `:active` con escala 0.98.
+- El resaltado de cambios en tiempo real es un pulso suave del borde o fondo (~1.5 s), nunca un parpadeo.
+- Respetar `prefers-reduced-motion`: sin animaciones no esenciales.
+- Usar CSS/Tailwind para el movimiento; no agregar librerías de animación sin pedir confirmación.
+
+*Responsive y accesibilidad*
+- Mobile first. Grid de tarjetas: 1 columna en móvil, 2 en tablet, 3–4 en escritorio. Layout con max-width centrado.
+- Zonas táctiles de al menos 44×44px, contraste AA como mínimo en ambos temas, foco visible por teclado, `aria-label` en botones de solo ícono.
+- Íconos: set único de trazo fino y consistente (lucide-react), tamaño 18–20px.
+
+*Regla para el agente:* antes de crear un componente nuevo, revisa los tokens y componentes existentes y reutilízalos. Prohibido usar el aspecto por defecto de Tailwind o de librerías de UI sin ajustarlo a estos tokens.
 
 **Cliente HTTP**
 - `fetch` con `credentials: 'include'`. Un único `httpClient` en `lib/`. Ante un 401, limpiar la sesión y redirigir a `/login`.
@@ -204,7 +264,7 @@ Mantén `docs/AI_LOG.md` con una entrada por fase usando esta plantilla:
 ## Fase N — <título>
 - **Herramienta:** opencode + <modelo usado>
 - **Delegado a la IA:** <qué generó el agente>
-- **Intervención de Carlos:** <!-- lo completa Carlos: qué corrigió, decidió o reescribió -->
+- **Intervención de Carlos Eduardo (Intervención humana):**
 - **Prompt clave (opcional):** <prompt usado, si fue relevante>
 ```
 
@@ -212,6 +272,7 @@ Reglas: no exageres ni embellezcas lo que hizo la IA; describe con honestidad. L
 
 ## 13. Definición de terminado
 
+- La UI usa solo los tokens de diseño definidos (colores, radios, tipografía) y se ve consistente en light y dark, en móvil y escritorio.
 - `pnpm install && pnpm db:up && pnpm db:migrate && pnpm db:seed && pnpm dev` levanta todo desde cero.
 - Credenciales de prueba documentadas: `admin@ifx.test / Admin123!` y `client@ifx.test / Client123!`.
 - El token no aparece en ningún body de respuesta ni en `localStorage`/`sessionStorage`.
