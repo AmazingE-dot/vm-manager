@@ -23,7 +23,7 @@ ver `AGENTS.md`, sección 12).
   - Nota: Prettier reformateó `docs/AGENTS.md` en la primera pasada; se restauró el original y se
     excluyó el archivo de Prettier (`.prettierignore`). El repositorio aún no está inicializado
     en git, así que no hay commits de esta fase.
-- **Intervención de Carlos:** <!-- lo completa Carlos: qué corrigió, decidió o reescribió -->
+- **Intervención de Carlos Eduardo (Intervención humana):**
 - **Prompt clave (opcional):** «Lee AGENTS.md completo. Ejecuta únicamente la Fase 0 (andamiaje).
   Cuando termines, detente, resume qué creaste y agrega la entrada de la Fase 0 en docs/AI_LOG.md.
   No avances a la Fase 1.»
@@ -54,7 +54,7 @@ ver `AGENTS.md`, sección 12).
     build de la API ya no mapea a las fuentes de `shared`).
   - Ajustes de entorno: Postgres local pasa al puerto 5433 (había un PostgreSQL nativo en 5432)
     y la configuración de pnpm 12 migró `onlyBuiltDependencies` → `allowBuilds`.
-- **Intervención de Carlos:** <!-- lo completa Carlos: qué corrigió, decidió o reescribió -->
+- **Intervención de Carlos Eduardo (Intervención humana):**
 - **Prompt clave (opcional):** «Pasa a la fase 2, ya inicialice git y ya movi manualmente
   agents.md a la raiz» (alcance confirmado: Fases 1 y 2 seguidas).
 
@@ -70,5 +70,36 @@ ver `AGENTS.md`, sección 12).
     duplicado 409, PUT parcial y validaciones 400 con `details`.
   - Verificación manual contra el servidor real: cookie con flags correctos, login sin token en
     el body y respuestas 403/409/415 esperadas.
-- **Intervención de Carlos:** <!-- lo completa Carlos: qué corrigió, decidió o reescribió -->
+- **Intervención de Carlos Eduardo (Intervención humana):**
 - **Prompt clave (opcional):** — (mismo hilo que la Fase 1).
+
+## Fase 3 — Frontend base
+
+- **Herramienta:** opencode + DeepSeek V4.1 Flash
+- **Delegado a la IA:**
+  - `apps/web` (Vite 8 + React 19 + TypeScript) con el sistema de diseño de AGENTS.md, sección 9:
+    tokens como variables CSS conmutables por tema y mapeados a Tailwind 4 (`@theme inline`),
+    tipografía y radios fijos, sombras suaves (sin sombra en dark), barra con efecto vidrio y
+    fallback sólido.
+  - Dark mode por clase: script inline en `index.html` (sin parpadeo), respeta
+    `prefers-color-scheme` en la primera visita y persiste la preferencia en `localStorage`.
+  - `httpClient` único (fetch con `credentials: 'include'`), errores uniformes y 401 que limpia
+    la sesión; store de sesión en Zustand y restauración con `GET /me` al arrancar (splash
+    mientras carga).
+  - Router (React Router 8) con `ProtectedRoute` (redirige a `/login` recordando el destino) y
+    `AdminRoute` (un CLIENT que entre por URL a `/vms/new` es redirigido); la página de login
+    redirige si ya hay sesión.
+  - LoginPage con react-hook-form + zodResolver usando `loginSchema` de `packages/shared`,
+    validación en tiempo real, botón deshabilitado si es inválido y error genérico del servidor.
+  - Layout con barra superior (glass), navegación, toggle de tema y cerrar sesión; componentes
+    propios (Button, TextInput, Card, EmptyState, Spinner, ThemeToggle, PageHeader) y
+    placeholders de Dashboard/VMs/Formulario para las Fases 4 y 5.
+  - 6 tests de componentes críticos (guards y formulario de login) con Testing Library + jsdom;
+    la suite total del repo queda en 34 tests.
+  - Smoke real con ambos servidores: SPA servida, proxy `/api` funcionando (401/200), login sin
+    token en el body, CSRF 415 y tokens presentes en el CSS compilado.
+  - Dependencias fuera de la tabla del stack (justificadas): `@tailwindcss/vite` (plugin oficial
+    de Tailwind 4), Testing Library + jsdom (tests de componentes), `lucide-react` (íconos,
+    indicado por la sección de diseño) y `eslint-plugin-react-hooks` (lint de hooks, en la raíz).
+- **Intervención de Carlos Eduardo (Intervención humana):**
+- **Prompt clave (opcional):** «Vamos a la fase 3».

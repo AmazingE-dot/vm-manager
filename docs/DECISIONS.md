@@ -108,3 +108,33 @@ subconjunto de campos (lo pide la sección 6 de AGENTS.md).
 `NOT_FOUND` (404), `CONFLICT` (409, nombre duplicado), `RATE_LIMITED` (429) y, añadidos aquí:
 `UNSUPPORTED_MEDIA_TYPE` (415, CSRF), `PAYLOAD_TOO_LARGE` (413, límite de body de 64 KB) e
 `INTERNAL_ERROR` (500, sin stack traces en la respuesta).
+
+## Fase 3 — Frontend base
+
+### D3-1 · Tailwind 4 CSS-first con los tokens de AGENTS.md
+
+Los tokens viven como variables CSS en `:root`/`.dark` y se mapean a Tailwind con `@theme inline`
+(colores, tipografía, radios, sombras y curva de easing). Dark mode por clase con
+`@custom-variant dark`; el vidrio esmerilado tiene fallback sólido vía `@supports`.
+
+### D3-2 · Sesión y 401 sin recargar la página
+
+El `httpClient` avisa de cualquier 401 y el store de sesión se limpia; los guards redirigen a
+`/login` recordando el destino. La restauración usa `GET /me` una sola vez al arrancar y mientras
+tanto se muestra un splash, para no rebotar al login en cada recarga.
+
+### D3-3 · Dependencias añadidas fuera de la tabla del stack
+
+`@tailwindcss/vite` (plugin oficial de Tailwind 4), `@testing-library/react` +
+`@testing-library/jest-dom` + `jsdom` (los tests de componentes que pide la fila "Tests"),
+`lucide-react` (el set de íconos que indica la sección de diseño) y `eslint-plugin-react-hooks`
+(lint de hooks, en la raíz). Todas con justificación de una línea.
+
+### D3-4 · Rutas de fases futuras como placeholders
+
+`/`, `/vms`, `/vms/new` y `/vms/:id/edit` ya existen con contenido provisional ("Fase 4/5") y
+sus guards activos; las fases siguientes solo reemplazan el contenido.
+
+### D3-5 · Bundle único por ahora
+
+Vite avisa de un chunk > 500 KB; se valorará code splitting en el pulido (Fase 7).
