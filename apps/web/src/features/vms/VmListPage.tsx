@@ -9,6 +9,7 @@ import { ConfirmDialog } from '../../components/ConfirmDialog';
 import { EmptyState } from '../../components/EmptyState';
 import { PageHeader } from '../../components/PageHeader';
 import { SegmentedControl } from '../../components/SegmentedControl';
+import { useDocumentTitle } from '../../lib/useDocumentTitle';
 import { useRecentChangesStore } from '../realtime/recentChanges';
 import { VmCard } from './components/VmCard';
 import { VmCardSkeleton } from './components/VmCardSkeleton';
@@ -24,6 +25,7 @@ const FILTER_OPTIONS = [
 ] as const;
 
 export function VmListPage() {
+  useDocumentTitle('Máquinas virtuales');
   const { data: vms, isPending, isError, refetch } = useVms();
   const { updateVm, deleteVm } = useVmMutations();
   const canCreate = useCan('ADMIN');

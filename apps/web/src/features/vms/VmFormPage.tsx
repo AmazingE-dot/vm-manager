@@ -18,6 +18,7 @@ import { Skeleton } from '../../components/Skeleton';
 import { TextInput } from '../../components/TextInput';
 import { Toggle } from '../../components/Toggle';
 import { ApiError } from '../../lib/httpClient';
+import { useDocumentTitle } from '../../lib/useDocumentTitle';
 import { OS_LABELS, VM_STATUS_LABELS } from './labels';
 import { useVmMutations } from './hooks/useVmMutations';
 import { useVms } from './hooks/useVms';
@@ -28,6 +29,7 @@ export function VmFormPage() {
   const { id } = useParams();
   const isEdit = Boolean(id);
   const { data: vms, isPending } = useVms();
+  useDocumentTitle(isEdit ? 'Editar VM' : 'Nueva VM');
 
   if (isEdit && isPending) {
     return (

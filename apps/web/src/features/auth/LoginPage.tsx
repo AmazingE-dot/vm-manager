@@ -8,6 +8,7 @@ import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { TextInput } from '../../components/TextInput';
 import { ApiError } from '../../lib/httpClient';
+import { useDocumentTitle } from '../../lib/useDocumentTitle';
 import { useAuth } from './useAuth';
 
 interface LocationState {
@@ -17,6 +18,7 @@ interface LocationState {
 export function LoginPage() {
   const { isAuthenticated, login } = useAuth();
   const location = useLocation();
+  useDocumentTitle('Iniciar sesión');
 
   const {
     register,
@@ -49,7 +51,7 @@ export function LoginPage() {
   });
 
   return (
-    <div className="flex min-h-dvh items-center justify-center px-4 py-10">
+    <main className="flex min-h-dvh items-center justify-center px-4 py-10">
       <div className="w-full max-w-sm">
         <div className="mb-8 flex flex-col items-center gap-3 text-center">
           <div className="flex size-14 items-center justify-center rounded-card bg-surface-2">
@@ -105,6 +107,6 @@ export function LoginPage() {
           Demo: admin@ifx.test · Admin123! — client@ifx.test · Client123!
         </p>
       </div>
-    </div>
+    </main>
   );
 }

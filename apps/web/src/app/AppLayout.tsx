@@ -16,6 +16,12 @@ export function AppLayout() {
 
   return (
     <div className="min-h-dvh">
+      <a
+        href="#contenido"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-4 focus:z-50 focus:rounded-control focus:bg-surface focus:px-4 focus:py-2 focus:text-body focus:shadow-card"
+      >
+        Saltar al contenido
+      </a>
       <header className="glass sticky top-0 z-10 border-b border-separator">
         <div className="mx-auto flex min-h-16 w-full max-w-6xl items-center gap-3 px-4 sm:px-6">
           <NavLink to="/" className="flex items-center gap-2 text-text">
@@ -60,7 +66,7 @@ export function AppLayout() {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
+      <main id="contenido" className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
         <Outlet />
       </main>
     </div>
