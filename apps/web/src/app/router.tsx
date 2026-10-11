@@ -16,12 +16,24 @@ const DashboardPage = lazy(() =>
 const VmListPage = lazy(() =>
   import('../features/vms/VmListPage').then((module) => ({ default: module.VmListPage })),
 );
-const VmFormPage = lazy(() =>
-  import('../features/vms/VmFormPage').then((module) => ({ default: module.VmFormPage })),
+const VmFormModal = lazy(() =>
+  import('../features/vms/VmFormModal').then((module) => ({ default: module.VmFormModal })),
 );
 
 function Page({ children }: { children: ReactNode }) {
   return <Suspense fallback={<PageFallback />}>{children}</Suspense>;
+}
+
+/** El formulario de VM se abre como modal sobre el listado (la URL se mantiene). */
+function VmFormRoute() {
+  return (
+    <>
+      <VmListPage />
+      <Suspense fallback={null}>
+        <VmFormModal />
+      </Suspense>
+    </>
+  );
 }
 
 export const router = createBrowserRouter([
@@ -61,7 +73,7 @@ export const router = createBrowserRouter([
         element: (
           <Page>
             <AdminRoute>
-              <VmFormPage />
+              <VmFormRoute />
             </AdminRoute>
           </Page>
         ),
@@ -71,7 +83,7 @@ export const router = createBrowserRouter([
         element: (
           <Page>
             <AdminRoute>
-              <VmFormPage />
+              <VmFormRoute />
             </AdminRoute>
           </Page>
         ),

@@ -1,5 +1,6 @@
-import { useEffect, useId } from 'react';
+import { useState } from 'react';
 import { Button } from './Button';
+import { Modal } from './Modal';
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -13,6 +14,8 @@ interface ConfirmDialogProps {
   onCancel: () => void;
 }
 
+const EXIT_MS = 180;
+
 /** Hoja de confirmación centrada, con fondo oscurecido y blur. */
 export function ConfirmDialog({
   open,
@@ -25,53 +28,34 @@ export function ConfirmDialog({
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
-  const titleId = useId();
-
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onCancel();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [open, onCancel]);
+  const [closing, setClosing] = useState(false);
 
   if (!open) {
     return null;
   }
 
+  const requestCancel = () => {
+    if (pending || closing) {
+      return;
+    }
+    setClosing(true);
+    window.setTimeout(() => {
+      setClosing(false);
+      onCancel();
+    }, EXIT_MS);
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div
-        aria-hidden="true"
-        onClick={onCancel}
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-      />
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        className="relative w-full max-w-sm rounded-card border border-separator bg-surface p-6 shadow-card"
-      >
-        <h2 id={titleId} className="text-heading">
-          {title}
-        </h2>
-        {description ? <p className="mt-2 text-sub text-text-secondary">{description}</p> : null}
-        <div className="mt-6 flex justify-end gap-3">
-          <Button variant="secondary" onClick={onCancel} disabled={pending} autoFocus>
-            {cancelLabel}
-          </Button>
-          <Button variant="danger" onClick={onConfirm} disabled={pending}>
-            {pending ? pendingLabel : confirmLabel}
-          </Button>
-        </div>
+    <Modal title={title} onClose={requestCancel} closing={closing} size="sm">
+      {description ? <p className="text-sub text-text-secondary">{description}</p> : null}
+      <div className="mt-6 flex justify-end gap-3">
+        <Button variant="secondary" onClick={requestCancel} disabled={pending} autoFocus>
+          {cancelLabel}
+        </Button>
+        <Button variant="danger" onClick={onConfirm} disabled={pending}>
+          {pending ? pendingLabel : confirmLabel}
+        </Button>
       </div>
-    </div>
+    </Modal>
   );
 }
