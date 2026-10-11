@@ -39,6 +39,9 @@ export const vmCreateSchema = z.object({
 });
 export type VmCreateInput = z.infer<typeof vmCreateSchema>;
 
+/** Tipo de entrada del formulario (con las coerciones de zod) para react-hook-form. */
+export type VmCreateFormInput = z.input<typeof vmCreateSchema>;
+
 /** Actualización parcial: acepta cualquier subconjunto de campos (ver docs/DECISIONS.md). */
 export const vmUpdateSchema = vmCreateSchema.partial();
 export type VmUpdateInput = z.infer<typeof vmUpdateSchema>;
