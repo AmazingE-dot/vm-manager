@@ -179,7 +179,9 @@ Objetivo: interfaz limpia, con mucho aire, jerarquía tipográfica clara y movim
 | `--text` | `#1D1D1F` | `#F5F5F7` |
 | `--text-secondary` | `#6E6E73` | `#98989D` |
 | `--separator` | `rgba(60,60,67,0.18)` | `rgba(84,84,88,0.65)` |
-| `--accent` (azul) | `#007AFF` | `#0A84FF` |
+| `--accent` (azul) | `#0038E8` | `#3D6BFF` |
+| `--accent-violet` (violeta) | `#5E22FE` | `#7B4DFF` |
+| `--accent-cyan` (azul) | `#00B8D4` | `#00E5FF` |
 | `--success` (verde) | `#34C759` | `#30D158` |
 | `--warning` (naranja) | `#FF9F0A` | `#FF9F0A` |
 | `--danger` (rojo) | `#FF3B30` | `#FF453A` |
@@ -217,6 +219,14 @@ Objetivo: interfaz limpia, con mucho aire, jerarquía tipográfica clara y movim
 - Íconos: set único de trazo fino y consistente (lucide-react), tamaño 18–20px.
 
 *Regla para el agente:* antes de crear un componente nuevo, revisa los tokens y componentes existentes y reutilízalos. Prohibido usar el aspecto por defecto de Tailwind o de librerías de UI sin ajustarlo a estos tokens.
+
+*Identidad de marca (IFX)*
+- Colores de marca: azul `#0038E8`, violeta `#5E22FE`, cian `#00E5FF`. El acento de la UI es el azul IFX (`--accent`); sustituye al azul de Apple de la tabla anterior.
+- Degradado de marca (`--brand-gradient`): `linear-gradient(135deg, #0038E8, #5E22FE, #00E5FF)`. Usarlo solo en momentos de marca: fondo/halo suave de la pantalla de login, detalle del logo y resaltes puntuales. Nunca en botones, tarjetas ni fondos de página.
+- Gráficos: cores = `--accent`, RAM = `--accent-violet`, disco = `--accent-cyan`.
+- Semántica intacta: verde = VM encendida, gris = apagada, rojo = destructivo/error. No usar el cian para indicar estados.
+- Logo: archivos en `apps/web/public/brand/`: `ifx-logo.webp` (tema claro), `ifx-logo-dark.webp` (tema oscuro, texto blanco) y `ifx-mark.webp` (solo símbolo, para favicon y espacios pequeños). Mostrar la variante según el tema activo. No recolorear, estirar ni aplicar filtros al logo. Título de la app y favicon con el símbolo.
+- Mantener el aspecto sobrio estilo Apple: la marca aparece en el acento, el logo y los gráficos, sin saturar la interfaz de color.
 
 **Cliente HTTP**
 - `fetch` con `credentials: 'include'`. Un único `httpClient` en `lib/`. Ante un 401, limpiar la sesión y redirigir a `/login`.
