@@ -241,3 +241,15 @@ ver `AGENTS.md`, sección 12).
 - **Prompt clave (opcional):** «Lee AGENTS.md, sección 9, bloque "Identidad de marca (IFX)", y la
   tabla de tokens actualizada. Los logos ya están en apps/web/public/brand/. Tarea: aplicar la
   identidad de marca.» (y «Cambia el nombre de la página por IFX VM Manager»).
+
+## Ajuste de contraste — buscador en modo claro
+
+- **Herramienta:** opencode + DeepSeek V4.1 Flash
+- **Delegado a la IA:**
+  - El buscador del listado se perdía sobre el fondo claro: usaba `--surface-2` (#F2F2F7), casi
+    idéntico al fondo de página (`--bg` #F5F5F7). Ahora usa el mismo tratamiento que las tarjetas
+    (`--surface` + borde `--separator`) y se lee como un campo en ambos temas.
+  - Los placeholders (buscador y campos de formulario) pasan de `--text-secondary` al 70 % de
+    opacidad a opacidad completa, para cumplir contraste AA en claro y oscuro.
+- **Intervención de Carlos Eduardo (Intervención humana):**
+- **Prompt clave (opcional):** «No se ve bien el Buscar por nombre... en el modo light».
