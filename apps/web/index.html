@@ -21,9 +21,32 @@
         }
       })();
     </script>
+    <style>
+      /* Splash mínimo antes de que React monte (evita la pantalla en blanco). */
+      html {
+        background-color: #f5f5f7;
+      }
+      html.dark {
+        background-color: #000000;
+      }
+      .boot-splash {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .boot-splash img {
+        opacity: 0.4;
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="boot-splash" role="status" aria-label="Cargando">
+        <img src="/brand/ifx-mark.webp" alt="" width="64" height="64" />
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

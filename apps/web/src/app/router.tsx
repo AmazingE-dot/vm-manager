@@ -1,7 +1,8 @@
 import { lazy, Suspense, type ReactNode } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router';
+import { SplashScreen } from '../components/SplashScreen';
 import { AppLayout } from './AppLayout';
-import { AdminRoute, ProtectedRoute, SessionSplash } from './guards';
+import { AdminRoute, ProtectedRoute } from './guards';
 import { PageFallback } from './PageFallback';
 
 // Cada página se carga en su propio chunk (ver `codeSplitting` en vite.config).
@@ -40,7 +41,7 @@ export const router = createBrowserRouter([
   {
     path: '/login',
     element: (
-      <Suspense fallback={<SessionSplash />}>
+      <Suspense fallback={<SplashScreen />}>
         <LoginPage />
       </Suspense>
     ),

@@ -1,22 +1,17 @@
 import type { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router';
-import { Spinner } from '../components/Spinner';
+import { SplashScreen, useSplashVisibility } from '../components/SplashScreen';
 import { useAuth } from '../features/auth/useAuth';
-
-export function SessionSplash() {
-  return (
-    <div className="flex min-h-dvh items-center justify-center">
-      <Spinner className="size-8" />
-    </div>
-  );
-}
 
 export function ProtectedRoute({ children }: { children: ReactNode }) {
   const { status, isAuthenticated } = useAuth();
   const location = useLocation();
 
-  if (status === 'idle' || status === 'loading') {
-    return <SessionSplash />;
+  const isLoading = status === 'idle' || status === 'loading';
+  const splash = useSplashVisibility(isLoading);
+
+  if (isLoading || splash.visible) {
+    return <SplashScreen visible={splash.visible} closing={splash.closing} />;
   }
 
   if (!isAuthenticated) {
