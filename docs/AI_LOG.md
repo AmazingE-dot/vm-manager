@@ -147,3 +147,30 @@ ver `AGENTS.md`, sección 12).
     chunks > 500 KB; la optimización se hará en el pulido, como se indicó en AGENTS.md.
 - **Intervención de Carlos Eduardo (Intervención humana):**
 - **Prompt clave (opcional):** «Siguiente fase».
+
+## Fase 6 — Realtime
+
+- **Herramienta:** opencode + DeepSeek V4.1 Flash
+- **Delegado a la IA:**
+  - socket.io 4.8 montado directamente sobre el servidor HTTP de Fastify (sin plugin intermedio,
+    que no está en la lista del stack): la autenticación lee la cookie del handshake con
+    `app.parseCookie` y verifica el JWT con `app.jwt.verify`; sin cookie o con token inválido la
+    conexión se rechaza con `UNAUTHORIZED` (nada de token en query string).
+  - Los eventos `vm:created`, `vm:updated` y `vm:deleted` (nombres compartidos en
+    `packages/shared`) se emiten desde la capa de servicio, después de confirmar la escritura,
+    con el payload de la VM serializado a ISO.
+  - Cliente: singleton de socket en `features/realtime` y hook `useVmRealtime` montado en el
+    layout autenticado; actualiza el cache de TanStack Query con `setQueryData` comparando
+    `updatedAt` (idempotente: el originador no ve duplicados ni doble resaltado) y marca el id
+    ~1.5 s en un store Zustand para el pulso.
+  - Resaltado: animación CSS sutil de borde/fondo (1.5 s, curva suave) en la tarjeta, que respeta
+    `prefers-reduced-motion` con la regla global de animaciones reducidas.
+  - 9 tests nuevos: 2 de integración en la API con socket.io-client real (rechazo sin cookie y
+    secuencia created/updated/deleted) y 7 en el front (store de cambios recientes, hook con
+    socket simulado —inserción, actualización sin duplicar, eco ignorado y borrado— y resaltado
+    de la tarjeta). La suite total queda en 54 tests.
+  - Smoke real con el stack completo: cliente socket.io conectado **a través del proxy ws de
+    Vite** (rechazo sin cookie, conexión autenticada y los tres eventos verificados).
+  - Bundle tras la fase: 933 KB (281 KB gzip); sigue pendiente la optimización de la Fase 7.
+- **Intervención de Carlos Eduardo (Intervención humana):**
+- **Prompt clave (opcional):** «vamos con el siguiente paso».

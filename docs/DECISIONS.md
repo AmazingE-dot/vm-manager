@@ -187,3 +187,30 @@ de error con reintentar.
 Con Recharts añadido, el build de producción queda en ~891 KB (267 KB gzip) y Vite avisa de
 chunks > 500 KB. La optimización (React.lazy + manualChunks) se hará en la Fase 7 y se comparará
 contra esta cifra, como pide AGENTS.md.
+
+## Fase 6 — Realtime
+
+### D6-1 · socket.io directo sobre `app.server`, sin plugin intermedio
+
+La lista del stack incluye socket.io, no un plugin de Fastify, así que el servidor se monta con
+`new SocketServer(app.server)` en `realtime/socket.ts`. La autenticación ocurre en el handshake:
+cookie → `app.parseCookie` → `app.jwt.verify`; el rechazo es `UNAUTHORIZED` y nunca se acepta un
+token por query string.
+
+### D6-2 · Emisión desde la capa de servicio con nombres compartidos
+
+Los nombres de los eventos viven en `packages/shared` (`VM_EVENTS`) para que servidor y cliente no
+se desincronicen. La emisión se hace en el servicio de VMs tras confirmar la escritura en DB, con
+las fechas serializadas a ISO (Prisma devuelve `Date`).
+
+### D6-3 · Cliente idempotente (sin duplicados ni doble resaltado)
+
+`useVmRealtime` aplica cada evento solo si el `updatedAt` entrante es más nuevo (o el id no
+existe); el resaltado se marca únicamente cuando el cache cambió de verdad, así el originador no
+se auto-resalta. Además, el alta optimista descarta cualquier copia previa del id real para el
+caso de carrera en el que el evento llegue antes que la respuesta HTTP.
+
+### D6-4 · Resaltado con animación CSS
+
+El pulso de ~1.5 s es una animación CSS de borde/fondo (curva suave) con temporizador por id en un
+store Zustand; la regla global de `prefers-reduced-motion` la desactiva cuando el usuario lo pide.
