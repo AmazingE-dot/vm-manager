@@ -6,25 +6,25 @@ import { isoDateTimeSchema, uuidSchema } from '../primitives.js';
 export const VM_NAME_PATTERN = /^[a-z0-9]([a-z0-9-]*[a-z0-9])$/;
 
 export const vmNameSchema = z
-  .string()
+  .string({ error: 'El nombre es obligatorio' })
   .min(3, 'El nombre debe tener al menos 3 caracteres')
   .max(32, 'El nombre debe tener como máximo 32 caracteres')
   .regex(VM_NAME_PATTERN, 'Solo minúsculas, números y guiones, sin empezar ni terminar con guion');
 
 const coresSchema = z.coerce
-  .number()
+  .number({ error: 'Introduce un número' })
   .int('Debe ser un número entero')
   .min(1, 'El mínimo es 1 núcleo')
   .max(64, 'El máximo es 64 núcleos');
 
 const ramSchema = z.coerce
-  .number()
+  .number({ error: 'Introduce un número' })
   .int('Debe ser un número entero')
   .min(1, 'El mínimo es 1 GB')
   .max(512, 'El máximo es 512 GB');
 
 const diskSchema = z.coerce
-  .number()
+  .number({ error: 'Introduce un número' })
   .int('Debe ser un número entero')
   .min(10, 'El mínimo es 10 GB')
   .max(4096, 'El máximo es 4096 GB');

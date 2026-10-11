@@ -7,10 +7,10 @@ export type Role = z.infer<typeof roleSchema>;
 
 /** Estados posibles de una VM. */
 export const VM_STATUSES = ['RUNNING', 'STOPPED'] as const;
-export const vmStatusSchema = z.enum(VM_STATUSES);
+export const vmStatusSchema = z.enum(VM_STATUSES, { error: 'Estado no válido' });
 export type VmStatus = z.infer<typeof vmStatusSchema>;
 
 /** Sistemas operativos soportados. */
 export const OPERATING_SYSTEMS = ['UBUNTU', 'DEBIAN', 'WINDOWS_SERVER', 'CENTOS', 'ROCKY'] as const;
-export const osSchema = z.enum(OPERATING_SYSTEMS);
+export const osSchema = z.enum(OPERATING_SYSTEMS, { error: 'Sistema operativo no válido' });
 export type Os = z.infer<typeof osSchema>;

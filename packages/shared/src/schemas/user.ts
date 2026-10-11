@@ -5,8 +5,8 @@ import { uuidSchema } from '../primitives.js';
 /** Usuario expuesto por la API; nunca incluye `passwordHash`. */
 export const userSchema = z.object({
   id: uuidSchema,
-  email: z.email(),
-  name: z.string().min(1, 'El nombre es obligatorio'),
+  email: z.email('El email no es válido'),
+  name: z.string({ error: 'El nombre es obligatorio' }).min(1, 'El nombre es obligatorio'),
   role: roleSchema,
 });
 export type User = z.infer<typeof userSchema>;

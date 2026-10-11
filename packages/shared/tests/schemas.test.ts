@@ -72,6 +72,20 @@ describe('vmCreateSchema', () => {
       expect(vmCreateSchema.safeParse({ ...validVmInput, ...invalidCase }).success).toBe(false);
     }
   });
+
+  it('usa mensajes en español cuando falta un campo o el número no es válido', () => {
+    const nanResult = vmCreateSchema.safeParse({ ...validVmInput, cores: Number.NaN });
+    expect(nanResult.success).toBe(false);
+    if (!nanResult.success) {
+      expect(nanResult.error.issues[0]?.message).toBe('Introduce un número');
+    }
+
+    const missingName = vmCreateSchema.safeParse({ ...validVmInput, name: undefined });
+    expect(missingName.success).toBe(false);
+    if (!missingName.success) {
+      expect(missingName.error.issues[0]?.message).toBe('El nombre es obligatorio');
+    }
+  });
 });
 
 describe('vmUpdateSchema', () => {
