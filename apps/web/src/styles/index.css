@@ -1,0 +1,122 @@
+@import 'tailwindcss';
+
+/* Dark mode por clase: el script inline de index.html aplica `.dark` antes del render. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Tokens de diseño (AGENTS.md, sección 9) como variables CSS conmutables por tema. */
+:root {
+  --bg: #f5f5f7;
+  --surface: #ffffff;
+  --surface-2: #f2f2f7;
+  --text: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --separator: rgba(60, 60, 67, 0.18);
+  --accent: #007aff;
+  --success: #34c759;
+  --warning: #ff9f0a;
+  --danger: #ff3b30;
+  --surface-glass: rgba(255, 255, 255, 0.72);
+  --shadow-card-value: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.dark {
+  --bg: #000000;
+  --surface: #1c1c1e;
+  --surface-2: #2c2c2e;
+  --text: #f5f5f7;
+  --text-secondary: #98989d;
+  --separator: rgba(84, 84, 88, 0.65);
+  --accent: #0a84ff;
+  --success: #30d158;
+  --warning: #ff9f0a;
+  --danger: #ff453a;
+  --surface-glass: rgba(28, 28, 30, 0.72);
+  --shadow-card-value: 0 0 #0000;
+}
+
+/* Mapeo de tokens a Tailwind (colores, tipografía, radios, sombras y movimiento). */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-text: var(--text);
+  --color-text-secondary: var(--text-secondary);
+  --color-separator: var(--separator);
+  --color-accent: var(--accent);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+
+  --shadow-card: var(--shadow-card-value);
+  --ease-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', Inter, 'Segoe UI',
+    system-ui, sans-serif;
+
+  --text-title: 34px;
+  --text-title--line-height: 1.2;
+  --text-title--font-weight: 600;
+  --text-title--letter-spacing: -0.02em;
+  --text-heading: 22px;
+  --text-heading--line-height: 1.3;
+  --text-heading--font-weight: 600;
+  --text-heading--letter-spacing: -0.02em;
+  --text-body: 17px;
+  --text-body--line-height: 1.45;
+  --text-sub: 15px;
+  --text-sub--line-height: 1.45;
+  --text-caption: 13px;
+  --text-caption--line-height: 1.4;
+
+  --radius-card: 20px;
+  --radius-control: 12px;
+
+  --default-transition-duration: 200ms;
+  --default-transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@layer base {
+  html {
+    @apply bg-bg font-sans text-text antialiased;
+  }
+
+  body {
+    @apply min-h-dvh text-body;
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--accent) 24%, transparent);
+  }
+
+  /* Foco visible por teclado: anillo azul de baja opacidad. */
+  :focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--accent) 38%, transparent);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Barra con vidrio esmerilado; fallback sólido si no hay backdrop-filter. */
+  .glass {
+    background-color: var(--surface);
+  }
+
+  @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass {
+      background-color: var(--surface-glass);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      backdrop-filter: saturate(180%) blur(20px);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
