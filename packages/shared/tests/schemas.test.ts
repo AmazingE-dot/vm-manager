@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  loginSchema,
   osSchema,
   roleSchema,
   userSchema,
@@ -122,5 +123,21 @@ describe('userSchema y enums', () => {
   it('rechaza roles y sistemas operativos desconocidos', () => {
     expect(roleSchema.safeParse('SUPERADMIN').success).toBe(false);
     expect(osSchema.safeParse('MACOS').success).toBe(false);
+  });
+});
+
+describe('loginSchema', () => {
+  it('acepta email y contraseña válidos', () => {
+    expect(loginSchema.safeParse({ email: 'admin@ifx.test', password: 'Admin123!' }).success).toBe(
+      true,
+    );
+  });
+
+  it('rechaza email inválido, contraseña vacía o demasiado larga', () => {
+    expect(loginSchema.safeParse({ email: 'no-es-email', password: 'x' }).success).toBe(false);
+    expect(loginSchema.safeParse({ email: 'admin@ifx.test', password: '' }).success).toBe(false);
+    expect(
+      loginSchema.safeParse({ email: 'admin@ifx.test', password: 'a'.repeat(73) }).success,
+    ).toBe(false);
   });
 });
