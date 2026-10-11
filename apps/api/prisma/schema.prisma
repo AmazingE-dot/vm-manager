@@ -1,0 +1,49 @@
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "ts"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  CLIENT
+}
+
+enum VmStatus {
+  RUNNING
+  STOPPED
+}
+
+enum Os {
+  UBUNTU
+  DEBIAN
+  WINDOWS_SERVER
+  CENTOS
+  ROCKY
+}
+
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         Role     @default(CLIENT)
+  createdAt    DateTime @default(now())
+}
+
+model Vm {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @unique
+  cores     Int
+  ram       Int
+  disk      Int
+  os        Os
+  status    VmStatus @default(STOPPED)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
