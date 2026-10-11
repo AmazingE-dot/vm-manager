@@ -17,10 +17,10 @@ const vm: Vm = {
   updatedAt: '2026-10-10T12:00:00.000Z',
 };
 
-function renderCard() {
+function renderCard(recent = false) {
   return render(
     <MemoryRouter>
-      <VmCard vm={vm} onToggleStatus={vi.fn()} onDelete={vi.fn()} />
+      <VmCard vm={vm} recent={recent} onToggleStatus={vi.fn()} onDelete={vi.fn()} />
     </MemoryRouter>,
   );
 }
@@ -51,5 +51,16 @@ describe('VmCard según rol', () => {
     expect(screen.getByLabelText('Editar web-01')).toBeInTheDocument();
     expect(screen.getByLabelText('Eliminar web-01')).toBeInTheDocument();
     expect(screen.getByRole('switch')).toBeChecked();
+  });
+
+  it('aplica el resaltado cuando la VM cambió recientemente', () => {
+    useAuthStore.setState({
+      user: { id: 'u-1', email: 'admin@test.local', name: 'Admin', role: 'ADMIN' },
+      status: 'authenticated',
+    });
+
+    const { container } = renderCard(true);
+
+    expect(container.querySelector('.vm-changed')).not.toBeNull();
   });
 });

@@ -12,16 +12,25 @@ import { VmStatusBadge } from './VmStatusBadge';
 interface VmCardProps {
   vm: Vm;
   busy?: boolean;
+  recent?: boolean;
   onToggleStatus: (vm: Vm, status: VmStatus) => void;
   onDelete: (vm: Vm) => void;
 }
 
-export function VmCard({ vm, busy = false, onToggleStatus, onDelete }: VmCardProps) {
+export function VmCard({
+  vm,
+  busy = false,
+  recent = false,
+  onToggleStatus,
+  onDelete,
+}: VmCardProps) {
   const isPending = vm.id.startsWith('temp-');
   const actionsDisabled = isPending || busy;
 
   return (
-    <Card className={cn('flex flex-col gap-4 p-5', isPending && 'opacity-60')}>
+    <Card
+      className={cn('flex flex-col gap-4 p-5', isPending && 'opacity-60', recent && 'vm-changed')}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h2 className="flex items-center gap-2 text-body font-semibold">

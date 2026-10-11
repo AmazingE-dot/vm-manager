@@ -2,6 +2,7 @@ import { LogOut, Server } from 'lucide-react';
 import { NavLink, Outlet } from 'react-router';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { useAuth } from '../features/auth/useAuth';
+import { useVmRealtime } from '../features/realtime/useVmRealtime';
 import { cn } from '../lib/utils';
 
 const NAV_ITEMS = [
@@ -11,6 +12,7 @@ const NAV_ITEMS = [
 
 export function AppLayout() {
   const { user, logout } = useAuth();
+  useVmRealtime();
 
   return (
     <div className="min-h-dvh">

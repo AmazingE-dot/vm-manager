@@ -49,7 +49,13 @@ export function useVmMutations() {
       if (context) {
         queryClient.setQueryData<VmsData>(vmsQueryKey, (current) =>
           current
-            ? { vms: current.vms.map((vm) => (vm.id === context.tempId ? data.vm : vm)) }
+            ? {
+                // Se descarta cualquier copia previa del id real (p. ej. si el
+                // evento de socket llegó antes que la respuesta HTTP).
+                vms: current.vms
+                  .filter((vm) => vm.id !== data.vm.id)
+                  .map((vm) => (vm.id === context.tempId ? data.vm : vm)),
+              }
             : current,
         );
       }
