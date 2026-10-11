@@ -15,7 +15,7 @@ export function buttonClasses(variant: ButtonVariant = 'primary', className?: st
   return cn(
     'inline-flex min-h-11 items-center justify-center gap-2 rounded-control px-4',
     'text-body font-medium transition active:scale-[0.98]',
-    'disabled:pointer-events-none disabled:opacity-50',
+    'disabled:cursor-not-allowed disabled:opacity-50',
     VARIANT_CLASSES[variant],
     className,
   );

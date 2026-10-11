@@ -79,9 +79,14 @@ export function VmCard({
               aria-label={`Editar ${vm.name}`}
               aria-disabled={actionsDisabled}
               tabIndex={actionsDisabled ? -1 : undefined}
+              onClick={(event) => {
+                if (actionsDisabled) {
+                  event.preventDefault();
+                }
+              }}
               className={cn(
                 'inline-flex size-11 items-center justify-center rounded-control text-text-secondary transition hover:bg-surface-2 hover:text-text',
-                actionsDisabled && 'pointer-events-none opacity-50',
+                actionsDisabled && 'cursor-not-allowed opacity-50',
               )}
             >
               <Pencil size={18} strokeWidth={1.75} />
@@ -93,7 +98,7 @@ export function VmCard({
               onClick={() => {
                 onDelete(vm);
               }}
-              className="inline-flex size-11 items-center justify-center rounded-control text-text-secondary transition hover:bg-danger/10 hover:text-danger disabled:pointer-events-none disabled:opacity-50"
+              className="inline-flex size-11 items-center justify-center rounded-control text-text-secondary transition hover:bg-danger/10 hover:text-danger disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Trash2 size={18} strokeWidth={1.75} />
             </button>

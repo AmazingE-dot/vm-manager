@@ -22,7 +22,7 @@ export function Toggle({ checked, onChange, disabled = false, ariaLabel }: Toggl
       className={cn(
         'relative inline-flex h-[31px] w-[51px] shrink-0 items-center rounded-full transition',
         checked ? 'bg-success' : 'bg-separator',
-        'disabled:pointer-events-none disabled:opacity-50',
+        'disabled:cursor-not-allowed disabled:opacity-50',
       )}
     >
       <span
