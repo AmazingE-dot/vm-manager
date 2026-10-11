@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema, type LoginInput } from '@vm-manager/shared';
-import { Server } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { Navigate, useLocation } from 'react-router';
 import { toast } from 'sonner';
@@ -51,16 +50,24 @@ export function LoginPage() {
   });
 
   return (
-    <main className="flex min-h-dvh items-center justify-center px-4 py-10">
-      <div className="w-full max-w-sm">
+    <main className="relative flex min-h-dvh items-center justify-center overflow-hidden px-4 py-10">
+      <div
+        aria-hidden="true"
+        className="brand-halo absolute -top-32 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full"
+      />
+      <div className="relative w-full max-w-sm">
         <div className="mb-8 flex flex-col items-center gap-3 text-center">
-          <div className="flex size-14 items-center justify-center rounded-card bg-surface-2">
-            <Server className="text-accent" size={28} strokeWidth={1.5} />
-          </div>
-          <div className="flex flex-col gap-1">
-            <h1 className="text-title">VM Manager</h1>
-            <p className="text-sub text-text-secondary">Gestiona tus máquinas virtuales</p>
-          </div>
+          <img
+            src="/brand/ifx-logo.webp"
+            alt="IFX VM Manager"
+            className="h-10 w-auto dark:hidden"
+          />
+          <img
+            src="/brand/ifx-logo-dark.webp"
+            alt="IFX VM Manager"
+            className="hidden h-10 w-auto dark:block"
+          />
+          <p className="text-sub text-text-secondary">Gestiona tus máquinas virtuales</p>
         </div>
 
         <Card className="p-6">

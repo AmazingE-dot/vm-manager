@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-const BASE_TITLE = 'VM Manager';
+const BASE_TITLE = 'IFX VM Manager';
 
 /**
  * Mantiene el título del documento sincronizado con la página actual y lo

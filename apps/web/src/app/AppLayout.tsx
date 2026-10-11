@@ -1,4 +1,4 @@
-import { LogOut, Server } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import { NavLink, Outlet } from 'react-router';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { useAuth } from '../features/auth/useAuth';
@@ -24,9 +24,17 @@ export function AppLayout() {
       </a>
       <header className="glass sticky top-0 z-10 border-b border-separator">
         <div className="mx-auto flex min-h-16 w-full max-w-6xl items-center gap-3 px-4 sm:px-6">
-          <NavLink to="/" className="flex items-center gap-2 text-text">
-            <Server size={20} strokeWidth={1.75} className="text-accent" />
-            <span className="text-body font-semibold">VM Manager</span>
+          <NavLink to="/" className="flex items-center">
+            <img
+              src="/brand/ifx-logo.webp"
+              alt="IFX VM Manager"
+              className="h-7 w-auto dark:hidden"
+            />
+            <img
+              src="/brand/ifx-logo-dark.webp"
+              alt="IFX VM Manager"
+              className="hidden h-7 w-auto dark:block"
+            />
           </NavLink>
 
           <nav className="ml-2 flex items-center gap-1" aria-label="Principal">

@@ -14,8 +14,8 @@ interface ResourceChartsProps {
 
 const CHART_CONFIG = [
   { key: 'cores', title: 'vCPU por VM', unit: 'vCPU', color: 'var(--accent)' },
-  { key: 'ram', title: 'RAM por VM', unit: 'GB', color: 'var(--success)' },
-  { key: 'disk', title: 'Disco por VM', unit: 'GB', color: 'var(--warning)' },
+  { key: 'ram', title: 'RAM por VM', unit: 'GB', color: 'var(--accent-violet)' },
+  { key: 'disk', title: 'Disco por VM', unit: 'GB', color: 'var(--accent-cyan)' },
 ] as const;
 
 export function ResourceCharts({ activeVms, totalCount }: ResourceChartsProps) {

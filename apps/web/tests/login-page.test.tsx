@@ -17,6 +17,13 @@ describe('LoginPage', () => {
     useAuthStore.setState({ user: null, status: 'unauthenticated' });
   });
 
+  it('usa el nombre de marca IFX VM Manager en el logo y el título', () => {
+    renderLogin();
+
+    expect(screen.getAllByAltText('IFX VM Manager')).toHaveLength(2);
+    expect(document.title).toBe('Iniciar sesión · IFX VM Manager');
+  });
+
   it('mantiene el botón deshabilitado hasta que el formulario es válido', async () => {
     renderLogin();
     const submit = screen.getByRole('button', { name: 'Iniciar sesión' });
