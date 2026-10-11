@@ -9,7 +9,7 @@ import { createVmsService } from './service.ts';
 // Plugin de Fastify: la firma async es la forma canónica de registro.
 // eslint-disable-next-line @typescript-eslint/require-await -- plugin async de Fastify
 export default async function vmsRoutes(app: FastifyInstance): Promise<void> {
-  const service = createVmsService(createVmsRepository(app.prisma));
+  const service = createVmsService(createVmsRepository(app.prisma), app.vmEvents);
 
   app.get('/vms', { preHandler: [authenticate] }, async () => {
     const vms = await service.list();

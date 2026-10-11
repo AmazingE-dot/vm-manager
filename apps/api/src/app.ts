@@ -14,6 +14,7 @@ import { registerCors } from './plugins/cors.ts';
 import { registerHelmet } from './plugins/helmet.ts';
 import { registerJwt } from './plugins/jwt.ts';
 import { registerRateLimit } from './plugins/rateLimit.ts';
+import { createRealtime, createVmEventEmitter } from './realtime/socket.ts';
 
 const BODY_LIMIT_BYTES = 64 * 1024;
 const DEFAULT_LOGIN_RATE_LIMIT_MAX = 5;
@@ -48,6 +49,13 @@ export async function buildApp(options: BuildAppOptions = {}): Promise<FastifyIn
   await registerCors(app);
   await registerHelmet(app);
   await registerRateLimit(app);
+
+  // socket.io sobre el mismo servidor HTTP; los eventos se emiten desde el servicio de VMs.
+  const io = createRealtime(app);
+  app.decorate('vmEvents', createVmEventEmitter(io));
+  app.addHook('onClose', async () => {
+    await io.close();
+  });
 
   app.addHook('preValidation', requireJsonContentType);
 

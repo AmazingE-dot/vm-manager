@@ -1,7 +1,24 @@
-import type { VmCreateInput, VmUpdateInput } from '@vm-manager/shared';
+import type { Vm, VmCreateInput, VmUpdateInput } from '@vm-manager/shared';
 import { Prisma } from '../../generated/prisma/client.ts';
+import type { Vm as PrismaVm } from '../../generated/prisma/client.ts';
 import { ConflictError, NotFoundError } from '../../lib/errors.ts';
+import type { VmEvents } from '../../realtime/socket.ts';
 import type { VmsRepository } from './repository.ts';
+
+/** Prisma devuelve `Date`; el evento viaja con las fechas en ISO como el resto de la API. */
+function toVmPayload(vm: PrismaVm): Vm {
+  return {
+    id: vm.id,
+    name: vm.name,
+    cores: vm.cores,
+    ram: vm.ram,
+    disk: vm.disk,
+    os: vm.os,
+    status: vm.status,
+    createdAt: vm.createdAt.toISOString(),
+    updatedAt: vm.updatedAt.toISOString(),
+  };
+}
 
 function mapWriteError(error: unknown): unknown {
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -15,7 +32,7 @@ function mapWriteError(error: unknown): unknown {
   return error;
 }
 
-export function createVmsService(repository: VmsRepository) {
+export function createVmsService(repository: VmsRepository, events: VmEvents) {
   return {
     list() {
       return repository.list();
@@ -23,7 +40,9 @@ export function createVmsService(repository: VmsRepository) {
 
     async create(input: VmCreateInput) {
       try {
-        return await repository.create(input);
+        const vm = await repository.create(input);
+        events.emitVmCreated(toVmPayload(vm));
+        return vm;
       } catch (error) {
         throw mapWriteError(error);
       }
@@ -36,7 +55,9 @@ export function createVmsService(repository: VmsRepository) {
       }
 
       try {
-        return await repository.update(id, input);
+        const vm = await repository.update(id, input);
+        events.emitVmUpdated(toVmPayload(vm));
+        return vm;
       } catch (error) {
         throw mapWriteError(error);
       }
@@ -48,6 +69,7 @@ export function createVmsService(repository: VmsRepository) {
         throw new NotFoundError('La VM no existe');
       }
       await repository.remove(id);
+      events.emitVmDeleted(toVmPayload(existing));
     },
   };
 }
