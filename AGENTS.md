@@ -228,6 +228,19 @@ Objetivo: interfaz limpia, con mucho aire, jerarquía tipográfica clara y movim
 - Logo: archivos en `apps/web/public/brand/`: `ifx-logo.webp` (tema claro), `ifx-logo-dark.webp` (tema oscuro, texto blanco) y `ifx-mark.webp` (solo símbolo, para favicon y espacios pequeños). Mostrar la variante según el tema activo. No recolorear, estirar ni aplicar filtros al logo. Título de la app y favicon con el símbolo.
 - Mantener el aspecto sobrio estilo Apple: la marca aparece en el acento, el logo y los gráficos, sin saturar la interfaz de color.
 
+*Pantalla de carga (splash) de marca*
+- Se muestra mientras se restaura la sesión con `GET /me` al arrancar la app (hoy es un splash/spinner genérico). Reemplazarlo por un componente `SplashScreen` en `components/`.
+- Efecto: el logo IFX "se llena de color". Dos capas apiladas y centradas:
+  - Base: el logo en escala de grises con opacidad baja (~0.15–0.2).
+  - Superior: el mismo logo a color, revelado con `clip-path` animado de izquierda a derecha (`inset(0 100% 0 0)` → `inset(0 0 0 0)`), duración ~1.2–1.5 s, curva `cubic-bezier(0.2, 0.8, 0.2, 1)`.
+- Usar `ifx-logo.webp` en tema claro e `ifx-logo-dark.webp` en tema oscuro (en ambas capas). Esta es la única excepción a la regla de "sin filtros sobre el logo": se permite `filter: grayscale(1)` solo en la capa base del splash.
+- Solo CSS (keyframes), sin librerías de animación. Fondo `--bg`, logo centrado y de ancho moderado (160–240 px).
+- Evitar parpadeos: si la sesión se resuelve en menos de ~300 ms, no mostrar el splash. Si se muestra, mantenerlo lo suficiente para completar la animación (mínimo ~1.2 s) y salir con un fade de 200 ms.
+- Si la carga tarda más que la animación, el logo queda completo y a color, con un pulso muy sutil de opacidad.
+- Respetar `prefers-reduced-motion`: mostrar el logo a color estático, sin animación de relleno.
+- Accesibilidad: contenedor con `role="status"` y `aria-label="Cargando"`.
+- Opcional: un splash CSS mínimo inline en `index.html` para que no haya pantalla en blanco antes de que cargue React.
+
 **Cliente HTTP**
 - `fetch` con `credentials: 'include'`. Un único `httpClient` en `lib/`. Ante un 401, limpiar la sesión y redirigir a `/login`.
 - En desarrollo, Vite hace proxy de `/api/*` a la API reescribiendo el prefijo (`/api/vms` → `/vms`), así front y API son mismo origen y la cookie `SameSite=Strict` funciona sin fricción.
@@ -292,3 +305,4 @@ Reglas: no exageres ni embellezcas lo que hizo la IA; describe con honestidad. L
 - El cambio de estado de una VM hecho por un ADMIN se refleja y resalta en otros clientes conectados.
 - `pnpm lint` y `pnpm test` pasan.
 - El build de producción del frontend no muestra la advertencia de chunks mayores a 500 KB.
+- La pantalla de carga muestra el logo IFX llenándose de color y respeta `prefers-reduced-motion`.
