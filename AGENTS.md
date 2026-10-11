@@ -280,6 +280,8 @@ VITE_API_BASE=/api
 **Fase 7 — Pulido y documentación.** Revisión visual (responsive, dark/light), accesibilidad básica, `README.md` (guía de despliegue local paso a paso, credenciales de prueba, diagrama, decisiones arquitectónicas y estructura de carpetas, sección "Bitácora de IA" tomada de `docs/AI_LOG.md`).
 *Optimización de bundle (pendiente D3-5):* el build de Vite avisa de un chunk mayor a 500 KB. Aplicar code splitting: cargar las páginas con `React.lazy` + `Suspense` (con skeleton como fallback) y separar dependencias pesadas (Recharts, socket.io-client) con `manualChunks` en `vite.config`. Mostrar el tamaño de los chunks antes y después del build. Hacerlo solo en esta fase, cuando el frontend ya esté completo, para medir el bundle real.
 
+*Limitaciones conocidas (documentar en el README):* logout sin estado (el JWT vive hasta su expiración; mejora: `tokenVersion`), rate limit en memoria (con varias instancias, usar Redis), `trustProxy` desactivado (activarlo tras un proxy inverso), `GET /vms` sin paginación (suficiente a esta escala; cursor + índices si creciera).
+
 ## 12. Bitácora de IA (obligatoria)
 
 Mantén `docs/AI_LOG.md` con una entrada por fase usando esta plantilla:
