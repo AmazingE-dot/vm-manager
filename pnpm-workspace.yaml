@@ -1,0 +1,11 @@
+packages:
+  - 'apps/*'
+  - 'packages/*'
+
+# pnpm >= 10 bloquea por defecto los scripts de instalación de las dependencias.
+# Estos paquetes necesitan ejecutar su postinstall (Prisma descarga engines; esbuild verifica su binario).
+onlyBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
+  - esbuild
+  - prisma
