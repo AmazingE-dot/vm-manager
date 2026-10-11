@@ -255,6 +255,7 @@ VITE_API_BASE=/api
 **Fase 6 — Realtime.** socket.io en servidor con auth por cookie, eventos, hook `useVmRealtime`, animación de resaltado.
 
 **Fase 7 — Pulido y documentación.** Revisión visual (responsive, dark/light), accesibilidad básica, `README.md` (guía de despliegue local paso a paso, credenciales de prueba, diagrama, decisiones arquitectónicas y estructura de carpetas, sección "Bitácora de IA" tomada de `docs/AI_LOG.md`).
+*Optimización de bundle (pendiente D3-5):* el build de Vite avisa de un chunk mayor a 500 KB. Aplicar code splitting: cargar las páginas con `React.lazy` + `Suspense` (con skeleton como fallback) y separar dependencias pesadas (Recharts, socket.io-client) con `manualChunks` en `vite.config`. Mostrar el tamaño de los chunks antes y después del build. Hacerlo solo en esta fase, cuando el frontend ya esté completo, para medir el bundle real.
 
 ## 12. Bitácora de IA (obligatoria)
 
@@ -280,3 +281,4 @@ Reglas: no exageres ni embellezcas lo que hizo la IA; describe con honestidad. L
 - El optimistic UI revierte correctamente cuando la API falla.
 - El cambio de estado de una VM hecho por un ADMIN se refleja y resalta en otros clientes conectados.
 - `pnpm lint` y `pnpm test` pasan.
+- El build de producción del frontend no muestra la advertencia de chunks mayores a 500 KB.
