@@ -3,7 +3,7 @@ import { Navigate, useLocation } from 'react-router';
 import { Spinner } from '../components/Spinner';
 import { useAuth } from '../features/auth/useAuth';
 
-function SessionSplash() {
+export function SessionSplash() {
   return (
     <div className="flex min-h-dvh items-center justify-center">
       <Spinner className="size-8" />
