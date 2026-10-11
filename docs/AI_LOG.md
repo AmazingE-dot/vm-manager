@@ -103,3 +103,28 @@ ver `AGENTS.md`, sección 12).
     indicado por la sección de diseño) y `eslint-plugin-react-hooks` (lint de hooks, en la raíz).
 - **Intervención de Carlos Eduardo (Intervención humana):**
 - **Prompt clave (opcional):** «Vamos a la fase 3».
+
+## Fase 4 — VMs en el front
+
+- **Herramienta:** opencode + DeepSeek V4.1 Flash
+- **Delegado a la IA:**
+  - Listado `/vms` con búsqueda por nombre, segmented control (Todas/Encendidas/Apagadas), grid
+    responsive de tarjetas (1/2/3 columnas), skeletons durante la carga, empty state con CTA solo
+    para ADMIN y estado "sin resultados" con limpiar filtros.
+  - Formulario `/vms/new` y `/vms/:id/edit` con react-hook-form + `vmCreateSchema` compartido,
+    validación en tiempo real (`onChange`), botón deshabilitado si es inválido, errores por campo
+    y toggle iOS para el estado.
+  - Mutaciones con UI optimista: crear inserta una VM temporal `temp-<uuid>` (atenuada, con
+    spinner y acciones deshabilitadas) que se reemplaza al confirmar; editar y eliminar parchean
+    el cache; `onError` restaura el snapshot y muestra toast; `onSettled` invalida.
+  - `<Can role="ADMIN">` y `useCan()`: un CLIENT no ve crear, editar, eliminar ni el toggle.
+  - Diálogo de confirmación antes de eliminar (fondo oscurecido + blur, Escape, estado pendiente)
+    y toasts de éxito/error con sonner.
+  - Componentes nuevos: Skeleton, SegmentedControl, Toggle, ConfirmDialog, Select y Can.
+  - El formulario de edición lee la VM del cache del listado (la API no tiene `GET /vms/:id`).
+  - 5 tests nuevos (rollback del optimista al crear/borrar, reemplazo del temporal, visibilidad
+    por rol); la suite total queda en 39 tests.
+  - Smoke con servidores reales vía el proxy de Vite: 201/200/409/400/204 y la base de datos
+    queda limpia al final.
+- **Intervención de Carlos Eduardo (Intervención humana):**
+- **Prompt clave (opcional):** «Sigue con la siguiente fase».

@@ -138,3 +138,27 @@ sus guards activos; las fases siguientes solo reemplazan el contenido.
 ### D3-5 · Bundle único por ahora
 
 Vite avisa de un chunk > 500 KB; se valorará code splitting en el pulido (Fase 7).
+
+## Fase 4 — VMs en el front
+
+### D4-1 · El formulario de edición usa el cache del listado
+
+La API no expone `GET /vms/:id` (no está en la sección 6 de AGENTS.md), así que `/vms/:id/edit`
+busca la VM en el cache de TanStack Query del listado (comparte la query con `/vms`).
+
+### D4-2 · Detalle del optimistic UI
+
+Crear agrega una VM temporal (`temp-<uuid>`, atenuada y con acciones deshabilitadas) que se
+reemplaza por la real al confirmar; editar y eliminar parchean el cache. En `onError` se restaura
+el snapshot y se muestra un toast con el mensaje de la API; `onSettled` invalida la query. El
+toggle de estado de las tarjetas usa la misma mutación optimista (solo ADMIN).
+
+### D4-3 · Errores del formulario
+
+Además del toast de la mutación, el formulario mapea `CONFLICT` al campo `name` y los `details`
+de la API a sus campos; el resto va a un error general visible sobre el botón.
+
+### D4-4 · Tipo de entrada del formulario en `shared`
+
+Se exportó `VmCreateFormInput` (`z.input`) desde `packages/shared` para tipar react-hook-form con
+las coerciones de zod (patrón de tres genéricos del resolver).
