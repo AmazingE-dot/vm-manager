@@ -25,7 +25,7 @@ export function TextInput({ label, error, className, id, ref, ...props }: TextIn
         aria-describedby={error ? errorId : undefined}
         className={cn(
           'min-h-11 w-full rounded-control bg-surface-2 px-3.5 text-body text-text',
-          'transition placeholder:text-text-secondary/70',
+          'transition placeholder:text-text-secondary',
           className,
         )}
         {...props}

@@ -88,7 +88,7 @@ export function VmListPage() {
             }}
             placeholder="Buscar por nombre…"
             aria-label="Buscar por nombre"
-            className="min-h-11 w-full rounded-control bg-surface-2 pr-3.5 pl-9 text-body text-text transition placeholder:text-text-secondary/70"
+            className="min-h-11 w-full rounded-control border border-separator bg-surface pr-3.5 pl-9 text-body text-text transition placeholder:text-text-secondary"
           />
         </div>
         <SegmentedControl
