@@ -64,14 +64,21 @@ export function useVmRealtime(): void {
       removeVmFromCache(queryClient, vm.id);
     };
 
+    // Al (re)conectar, resincroniza: pudieron perderse eventos sin conexión.
+    const handleConnect = () => {
+      void queryClient.invalidateQueries({ queryKey: vmsQueryKey });
+    };
+
     socket.on(VM_EVENTS.created, handleUpsert);
     socket.on(VM_EVENTS.updated, handleUpsert);
     socket.on(VM_EVENTS.deleted, handleDeleted);
+    socket.on('connect', handleConnect);
 
     return () => {
       socket.off(VM_EVENTS.created, handleUpsert);
       socket.off(VM_EVENTS.updated, handleUpsert);
       socket.off(VM_EVENTS.deleted, handleDeleted);
+      socket.off('connect', handleConnect);
       disconnectSocket();
     };
   }, [queryClient]);

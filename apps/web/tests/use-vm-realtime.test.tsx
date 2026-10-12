@@ -8,10 +8,10 @@ import { useVmRealtime } from '../src/features/realtime/useVmRealtime';
 import { vmsQueryKey } from '../src/features/vms/hooks/useVms';
 
 const { handlers, fakeSocket } = vi.hoisted(() => {
-  const handlers = new Map<string, (vm: Vm) => void>();
+  const handlers = new Map<string, (...args: unknown[]) => void>();
   const fakeSocket = {
     connected: true,
-    on: (event: string, handler: (vm: Vm) => void) => {
+    on: (event: string, handler: (...args: unknown[]) => void) => {
       handlers.set(event, handler);
     },
     off: (event: string) => {
@@ -115,5 +115,16 @@ describe('useVmRealtime', () => {
     });
 
     expect(queryClient.getQueryData<{ vms: Vm[] }>(vmsQueryKey)?.vms).toHaveLength(0);
+  });
+
+  it('invalida la query de VMs al (re)conectar el socket', () => {
+    const { queryClient } = renderRealtime([]);
+    const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
+
+    act(() => {
+      handlers.get('connect')?.();
+    });
+
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: vmsQueryKey });
   });
 });
