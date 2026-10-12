@@ -28,11 +28,15 @@ export function AppLayout() {
             <img
               src="/brand/ifx-logo.webp"
               alt="IFX VM Manager"
+              width={1833}
+              height={816}
               className="h-7 w-auto dark:hidden"
             />
             <img
               src="/brand/ifx-logo-dark.webp"
               alt="IFX VM Manager"
+              width={1833}
+              height={816}
               className="hidden h-7 w-auto dark:block"
             />
           </NavLink>

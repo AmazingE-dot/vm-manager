@@ -91,12 +91,16 @@ export function SplashScreen({ visible = true, closing = false }: SplashScreenPr
           src="/brand/ifx-logo.webp"
           alt=""
           aria-hidden="true"
+          width={1833}
+          height={816}
           className="splash-base w-full dark:hidden"
         />
         <img
           src="/brand/ifx-logo-dark.webp"
           alt=""
           aria-hidden="true"
+          width={1833}
+          height={816}
           className="splash-base hidden w-full dark:block"
         />
         {/* Capa superior: el mismo logo a color, revelado con clip-path. */}
@@ -105,12 +109,16 @@ export function SplashScreen({ visible = true, closing = false }: SplashScreenPr
             src="/brand/ifx-logo.webp"
             alt=""
             aria-hidden="true"
+            width={1833}
+            height={816}
             className={cn('w-full dark:hidden', visible && 'splash-fill')}
           />
           <img
             src="/brand/ifx-logo-dark.webp"
             alt=""
             aria-hidden="true"
+            width={1833}
+            height={816}
             className={cn('hidden w-full dark:block', visible && 'splash-fill')}
           />
         </div>

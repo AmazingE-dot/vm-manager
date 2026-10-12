@@ -60,11 +60,15 @@ export function LoginPage() {
           <img
             src="/brand/ifx-logo.webp"
             alt="IFX VM Manager"
+            width={1833}
+            height={816}
             className="h-10 w-auto dark:hidden"
           />
           <img
             src="/brand/ifx-logo-dark.webp"
             alt="IFX VM Manager"
+            width={1833}
+            height={816}
             className="hidden h-10 w-auto dark:block"
           />
           <p className="text-sub text-text-secondary">Gestiona tus máquinas virtuales</p>
