@@ -155,3 +155,25 @@ describe('loginSchema', () => {
     ).toBe(false);
   });
 });
+
+describe('esquemas estrictos (campos desconocidos)', () => {
+  it('rechaza campos desconocidos en login y creación de VM con mensaje propio', () => {
+    const loginResult = loginSchema.safeParse({
+      email: 'admin@ifx.test',
+      password: 'Admin123!',
+      extra: 1,
+    });
+    expect(loginResult.success).toBe(false);
+    if (!loginResult.success) {
+      expect(loginResult.error.issues[0]?.message).toBe(
+        'La petición contiene campos no permitidos',
+      );
+    }
+
+    const vmResult = vmCreateSchema.safeParse({ ...validVmInput, extra: 1 });
+    expect(vmResult.success).toBe(false);
+    if (!vmResult.success) {
+      expect(vmResult.error.issues[0]?.message).toBe('La petición contiene campos no permitidos');
+    }
+  });
+});

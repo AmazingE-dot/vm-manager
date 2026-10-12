@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { osSchema, vmStatusSchema } from '../enums.js';
-import { isoDateTimeSchema, uuidSchema } from '../primitives.js';
+import { isoDateTimeSchema, strictObjectError, uuidSchema } from '../primitives.js';
 
 /** Formato del nombre: minúsculas, números y guiones; empieza y termina alfanumérico. */
 export const VM_NAME_PATTERN = /^[a-z0-9]([a-z0-9-]*[a-z0-9])$/;
@@ -29,14 +29,19 @@ const diskSchema = z.coerce
   .min(10, 'El mínimo es 10 GB')
   .max(4096, 'El máximo es 4096 GB');
 
-export const vmCreateSchema = z.object({
-  name: vmNameSchema,
-  cores: coresSchema,
-  ram: ramSchema,
-  disk: diskSchema,
-  os: osSchema,
-  status: vmStatusSchema.default('STOPPED'),
-});
+export const vmCreateSchema = z
+  .object(
+    {
+      name: vmNameSchema,
+      cores: coresSchema,
+      ram: ramSchema,
+      disk: diskSchema,
+      os: osSchema,
+      status: vmStatusSchema.default('STOPPED'),
+    },
+    { error: strictObjectError },
+  )
+  .strict();
 export type VmCreateInput = z.infer<typeof vmCreateSchema>;
 
 /** Tipo de entrada del formulario (con las coerciones de zod) para react-hook-form. */

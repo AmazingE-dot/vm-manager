@@ -84,6 +84,21 @@ describe('auth', () => {
     expect(body.error.details?.length).toBeGreaterThan(0);
   });
 
+  it('rechaza campos desconocidos en el login (esquemas estrictos)', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/login',
+      payload: { email: TEST_ADMIN.email, password: TEST_ADMIN.password, extra: 'hack' },
+    });
+
+    expect(response.statusCode).toBe(400);
+    const body = response.json<ErrorBody>();
+    expect(body.error.code).toBe('VALIDATION_ERROR');
+    expect(
+      body.error.details?.some((detail) => detail.message.includes('campos no permitidos')),
+    ).toBe(true);
+  });
+
   it('GET /me: 401 sin cookie, 200 con cookie; POST /logout limpia la cookie', async () => {
     const noCookie = await app.inject({ method: 'GET', url: '/me' });
     expect(noCookie.statusCode).toBe(401);

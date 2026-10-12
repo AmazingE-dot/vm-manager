@@ -106,6 +106,24 @@ describe('vms', () => {
     expect(body.error.details?.length).toBeGreaterThan(0);
   });
 
+  it('rechaza campos desconocidos al crear una VM (esquemas estrictos)', async () => {
+    const response = await request(app, 'POST', '/vms', adminCookie, {
+      name: 'estricta-01',
+      cores: 1,
+      ram: 1,
+      disk: 10,
+      os: 'UBUNTU',
+      hack: true,
+    });
+
+    expect(response.statusCode).toBe(400);
+    const body = response.json<ErrorBody>();
+    expect(body.error.code).toBe('VALIDATION_ERROR');
+    expect(
+      body.error.details?.some((detail) => detail.message.includes('campos no permitidos')),
+    ).toBe(true);
+  });
+
   it('CLIENT no puede crear, editar ni eliminar (403) y nada cambia', async () => {
     const create = await request(app, 'POST', '/vms', clientCookie, {
       name: 'no-permitida',
