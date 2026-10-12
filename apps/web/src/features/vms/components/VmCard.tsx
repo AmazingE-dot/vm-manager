@@ -6,26 +6,22 @@ import { Card } from '../../../components/Card';
 import { Spinner } from '../../../components/Spinner';
 import { Toggle } from '../../../components/Toggle';
 import { cn } from '../../../lib/utils';
+import { useRecentChangesStore } from '../../realtime/recentChanges';
 import { OS_LABELS, VM_STATUS_LABELS } from '../labels';
 import { VmStatusBadge } from './VmStatusBadge';
 
 interface VmCardProps {
   vm: Vm;
   busy?: boolean;
-  recent?: boolean;
   onToggleStatus: (vm: Vm, status: VmStatus) => void;
   onDelete: (vm: Vm) => void;
 }
 
-export function VmCard({
-  vm,
-  busy = false,
-  recent = false,
-  onToggleStatus,
-  onDelete,
-}: VmCardProps) {
+export function VmCard({ vm, busy = false, onToggleStatus, onDelete }: VmCardProps) {
   const isPending = vm.id.startsWith('temp-');
   const actionsDisabled = isPending || busy;
+  // Suscripción por tarjeta: solo se re-renderiza si SU id cambia de estado.
+  const recent = useRecentChangesStore((state) => state.ids.has(vm.id));
 
   return (
     <Card

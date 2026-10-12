@@ -1,8 +1,9 @@
 import type { Vm } from '@vm-manager/shared';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useAuthStore } from '../src/features/auth/authStore';
+import { useRecentChangesStore } from '../src/features/realtime/recentChanges';
 import { VmCard } from '../src/features/vms/components/VmCard';
 
 const vm: Vm = {
@@ -17,15 +18,19 @@ const vm: Vm = {
   updatedAt: '2026-10-10T12:00:00.000Z',
 };
 
-function renderCard(recent = false) {
+function renderCard() {
   return render(
     <MemoryRouter>
-      <VmCard vm={vm} recent={recent} onToggleStatus={vi.fn()} onDelete={vi.fn()} />
+      <VmCard vm={vm} onToggleStatus={vi.fn()} onDelete={vi.fn()} />
     </MemoryRouter>,
   );
 }
 
 describe('VmCard según rol', () => {
+  beforeEach(() => {
+    useRecentChangesStore.setState({ ids: new Set() });
+  });
+
   it('un CLIENT no ve editar, eliminar ni el toggle de estado', () => {
     useAuthStore.setState({
       user: { id: 'u-2', email: 'client@test.local', name: 'Client', role: 'CLIENT' },
@@ -53,14 +58,17 @@ describe('VmCard según rol', () => {
     expect(screen.getByRole('switch')).toBeChecked();
   });
 
-  it('aplica el resaltado cuando la VM cambió recientemente', () => {
+  it('aplica el resaltado solo cuando su id está marcado como reciente', () => {
     useAuthStore.setState({
       user: { id: 'u-1', email: 'admin@test.local', name: 'Admin', role: 'ADMIN' },
       status: 'authenticated',
     });
 
-    const { container } = renderCard(true);
+    const { container: withoutRecent } = renderCard();
+    expect(withoutRecent.querySelector('.vm-changed')).toBeNull();
 
-    expect(container.querySelector('.vm-changed')).not.toBeNull();
+    useRecentChangesStore.setState({ ids: new Set([vm.id]) });
+    const { container: withRecent } = renderCard();
+    expect(withRecent.querySelector('.vm-changed')).not.toBeNull();
   });
 });

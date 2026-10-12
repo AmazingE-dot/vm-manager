@@ -10,7 +10,6 @@ import { EmptyState } from '../../components/EmptyState';
 import { PageHeader } from '../../components/PageHeader';
 import { SegmentedControl } from '../../components/SegmentedControl';
 import { useDocumentTitle } from '../../lib/useDocumentTitle';
-import { useRecentChangesStore } from '../realtime/recentChanges';
 import { VmCard } from './components/VmCard';
 import { VmCardSkeleton } from './components/VmCardSkeleton';
 import { useVmMutations } from './hooks/useVmMutations';
@@ -29,7 +28,6 @@ export function VmListPage() {
   const { data: vms, isPending, isError, refetch } = useVms();
   const { updateVm, deleteVm } = useVmMutations();
   const canCreate = useCan('ADMIN');
-  const recentIds = useRecentChangesStore((state) => state.ids);
 
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('ALL');
@@ -166,7 +164,6 @@ export function VmListPage() {
               key={vm.id}
               vm={vm}
               busy={updateVm.isPending && updateVm.variables?.id === vm.id}
-              recent={recentIds.has(vm.id)}
               onToggleStatus={(target, status) => {
                 updateVm.mutate({ id: target.id, input: { status } });
               }}
