@@ -248,6 +248,17 @@ El detalle completo está en [`docs/DECISIONS.md`](docs/DECISIONS.md); resumen:
 - **Bundle** dividido con `React.lazy` + `codeSplitting.groups` (D7-1): de un chunk de 933 KB con
   aviso a 24 chunks (el mayor, 312 KB).
 
+## Limitaciones conocidas
+
+- **Logout sin estado:** al cerrar sesión solo se limpia la cookie; el JWT sigue siendo válido
+  hasta su expiración (1 h). Mejora futura: `tokenVersion` por usuario.
+- **Rate limit en memoria:** con varias instancias de la API cada una limita por su cuenta; con
+  escalado horizontal conviene un store compartido (por ejemplo Redis).
+- **`trustProxy` desactivado:** correcto en local; al desplegar tras un proxy inverso hay que
+  activarlo para que el rate limit vea la IP real.
+- **`GET /vms` sin paginación:** suficiente a esta escala; si la lista creciera, cursor + índices
+  (`status`, `createdAt`).
+
 ## Bitácora de IA
 
 Transcripción de [`docs/AI_LOG.md`](docs/AI_LOG.md) (el campo "Intervención de Carlos Eduardo" lo
@@ -527,3 +538,30 @@ completa él):
 - **Intervención de Carlos Eduardo (Intervención humana):**
 - **Prompt clave (opcional):** «Lee AGENTS.md, sección 9, bloque "Pantalla de carga (splash) de
   marca". Tarea: implementar el SplashScreen con el efecto de logo llenándose de color.»
+
+### Correcciones de la revisión (seguridad y rendimiento)
+
+- **Herramienta:** opencode + DeepSeek V4.1 Flash
+- **Delegado a la IA:**
+  - Seguridad: en `NODE_ENV=production` el arranque falla con mensaje claro si `JWT_SECRET` es un
+    valor de ejemplo o de desarrollo (los del `.env.example` y el default) o si tiene menos de 48
+    caracteres; la validación se extrajo a una función pura con tests para ambos casos y se
+    verificó además el fail-fast real en un subproceso.
+  - Rendimiento: `refetchOnWindowFocus` desactivado (el realtime mantiene el cache) y la query de
+    VMs se invalida al (re)conectar el socket para recuperar eventos perdidos; se conservan las
+    invalidaciones de `onSettled` en las mutaciones optimistas.
+  - Rendimiento: cada `VmCard` se suscribe solo a su id del store de "cambios recientes" (antes el
+    listado entero se re-renderizaba con cada marca).
+  - CLS: las imágenes del logo llevan `width`/`height` intrínsecos (1833×816) en login, barra
+    superior y splash; el splash de arranque usaba 64×64 sobre un símbolo de 615×670 (lo
+    deformaba) y ahora fija la altura por CSS.
+  - `.strict()` en `loginSchema` y `vmCreateSchema` (la actualización parcial lo hereda): los
+    campos desconocidos se rechazan con mensaje en español ("La petición contiene campos no
+    permitidos"); tests en shared y en la API.
+  - Se documentaron las limitaciones conocidas en el README (logout sin estado, rate limit en
+    memoria, `trustProxy`, `GET /vms` sin paginación).
+  - Verificación: lint, typecheck, 71 tests, format y build en verde.
+- **Intervención de Carlos Eduardo (Intervención humana):**
+- **Prompt clave (opcional):** «Aplica estas correcciones de la revisión de seguridad y
+  rendimiento, en este orden: …» (5 puntos; sin dependencias nuevas y sin import dinámico de
+  socket.io-client).
