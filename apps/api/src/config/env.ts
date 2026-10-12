@@ -36,11 +36,50 @@ if (!parsed.success) {
 
 export const env = parsed.data;
 
-// En producción, la URL de la base y el secreto son obligatorios (sin defaults).
-if (env.NODE_ENV === 'production') {
-  const missing = ['DATABASE_URL', 'JWT_SECRET'].filter((key) => !process.env[key]);
+/** Secretos de ejemplo (`.env.example`) o de desarrollo que no valen en producción. */
+const FORBIDDEN_PRODUCTION_SECRETS = new Set([
+  'dev-secret-solo-para-desarrollo-no-usar-en-produccion',
+  'cambia-esto-por-un-secreto-largo-de-al-menos-32-caracteres',
+]);
+
+/** Longitud mínima exigida al JWT_SECRET en producción. */
+export const PRODUCTION_SECRET_MIN_LENGTH = 48;
+
+/**
+ * Problemas de configuración que impiden arrancar en producción (función pura,
+ * testeable sin matar el proceso).
+ */
+export function findProductionConfigErrors(
+  config: { JWT_SECRET: string },
+  rawEnv: Record<string, string | undefined>,
+): string[] {
+  const missing = ['DATABASE_URL', 'JWT_SECRET'].filter((key) => !rawEnv[key]);
   if (missing.length > 0) {
-    console.error(`[config] En producción son obligatorias: ${missing.join(', ')}`);
+    return [`En producción son obligatorias: ${missing.join(', ')}`];
+  }
+
+  const errors: string[] = [];
+
+  if (config.JWT_SECRET.length < PRODUCTION_SECRET_MIN_LENGTH) {
+    errors.push(
+      `JWT_SECRET debe tener al menos ${PRODUCTION_SECRET_MIN_LENGTH} caracteres en producción`,
+    );
+  }
+  if (FORBIDDEN_PRODUCTION_SECRETS.has(config.JWT_SECRET)) {
+    errors.push('JWT_SECRET no puede ser un valor de ejemplo o de desarrollo en producción');
+  }
+
+  return errors;
+}
+
+// En producción la base y el secreto son obligatorios, y el secreto debe ser
+// propio y suficientemente largo (sin valores de ejemplo ni de desarrollo).
+if (env.NODE_ENV === 'production') {
+  const errors = findProductionConfigErrors(env, process.env);
+  if (errors.length > 0) {
+    for (const message of errors) {
+      console.error(`[config] ${message}`);
+    }
     process.exit(1);
   }
 }
