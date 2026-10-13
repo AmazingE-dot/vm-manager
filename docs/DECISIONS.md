@@ -31,6 +31,7 @@ del formulario (Fase 4). Los códigos de error de la API siguen en inglés (`VAL
 
 El archivo vive hoy en `docs/AGENTS.md`, mientras que el árbol de la sección 4 lo muestra en la
 raíz. No se movió en la Fase 0 para no tocar material de Carlos; queda a su decisión.
+Se acomodo en la raiz.
 
 ### D0-6 · Scripts `db:migrate` y `db:seed` apuntan a la futura `apps/api`
 
@@ -175,6 +176,7 @@ pura y testeada) calcula las sumas contando solo las VMs `RUNNING`.
 vCPU, RAM y disco tienen unidades distintas; mezclarlas en un único gráfico sería engañoso, así
 que se muestran tres barras horizontales (azul/verde/naranja, esquinas redondeadas, sin
 cuadrícula y tooltip minimalista), una por recurso y ordenadas de mayor a menor.
+Esto fue cambiado, ya que decidí más adelante usar los colores empresariales de IFX.
 
 ### D5-3 · Empty states diferenciados
 
