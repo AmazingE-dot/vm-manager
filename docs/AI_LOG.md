@@ -24,6 +24,12 @@ ver `AGENTS.md`, sección 12).
     excluyó el archivo de Prettier (`.prettierignore`). El repositorio aún no está inicializado
     en git, así que no hay commits de esta fase.
 - **Intervención de Carlos Eduardo (Intervención humana):**
+  - Revisé y validé por mi cuenta la información y los resultados que reportó la IA, sin darlos
+    por buenos solo porque ella los diera por correctos.
+  - La IA indicó que había corregido el archivo `.md` (`AGENTS.md`), pero al revisarlo seguía con
+    fallos, por lo que me tocó reestructurarlo.
+  - La estructura de archivos y carpetas se generó mal, así que también tuve que acomodar algunos
+    archivos a mano.
 - **Prompt clave (opcional):** «Lee AGENTS.md completo. Ejecuta únicamente la Fase 0 (andamiaje).
   Cuando termines, detente, resume qué creaste y agrega la entrada de la Fase 0 en docs/AI_LOG.md.
   No avances a la Fase 1.»
@@ -55,8 +61,11 @@ ver `AGENTS.md`, sección 12).
   - Ajustes de entorno: Postgres local pasa al puerto 5433 (había un PostgreSQL nativo en 5432)
     y la configuración de pnpm 12 migró `onlyBuiltDependencies` → `allowBuilds`.
 - **Intervención de Carlos Eduardo (Intervención humana):**
-- **Prompt clave (opcional):** «Pasa a la fase 2, ya inicialice git y ya movi manualmente
-  agents.md a la raiz» (alcance confirmado: Fases 1 y 2 seguidas).
+  - Revisé y validé por mi cuenta la información y los resultados que reportó la IA para esta fase
+    (API base y autenticación).
+  - Inicialicé git y terminé de acomodar manualmente la estructura de archivos antes de pasar a la
+    siguiente fase (ver Fase 0).
+- **Prompt clave (opcional):** «Pasa a la fase 2, ya inicialice git y ya acomode manualmentela estructura de archivos» (alcance confirmado: Fases 1 y 2 seguidas).
 
 ## Fase 2 — CRUD de VMs
 
@@ -71,6 +80,10 @@ ver `AGENTS.md`, sección 12).
   - Verificación manual contra el servidor real: cookie con flags correctos, login sin token en
     el body y respuestas 403/409/415 esperadas.
 - **Intervención de Carlos Eduardo (Intervención humana):**
+  - Revisé y validé por mi cuenta la información y los resultados que reportó la IA, sin darlos
+    por buenos solo porque ella los diera por correctos.
+  - En esta fase se habla de los nombres duplicados de VMs, y ese punto no lo corrigió la IA; lo
+    identifiqué al revisar el resultado.
 - **Prompt clave (opcional):** — (mismo hilo que la Fase 1).
 
 ## Fase 3 — Frontend base
@@ -102,6 +115,11 @@ ver `AGENTS.md`, sección 12).
     de Tailwind 4), Testing Library + jsdom (tests de componentes), `lucide-react` (íconos,
     indicado por la sección de diseño) y `eslint-plugin-react-hooks` (lint de hooks, en la raíz).
 - **Intervención de Carlos Eduardo (Intervención humana):**
+  - Revisé y validé por mi cuenta la información y los resultados que reportó la IA, sin darlos
+    por buenos solo porque ella los diera por correctos.
+  - Al revisar la interfaz encontré varios errores mínimos de diseño: contenido que se desbordaba
+    y pequeños fallos al cambiar de desktop a móvil (responsive). Los detecté yo en mi revisión y
+    se corrigieron después.
 - **Prompt clave (opcional):** «Vamos a la fase 3».
 
 ## Fase 4 — VMs en el front
@@ -127,6 +145,8 @@ ver `AGENTS.md`, sección 12).
   - Smoke con servidores reales vía el proxy de Vite: 201/200/409/400/204 y la base de datos
     queda limpia al final.
 - **Intervención de Carlos Eduardo (Intervención humana):**
+  - Revisé y validé por mi cuenta la información y los resultados que reportó la IA, sin darlos
+    por buenos solo porque ella los diera por correctos.
 - **Prompt clave (opcional):** «Sigue con la siguiente fase».
 
 ## Fase 5 — Dashboard
@@ -146,6 +166,14 @@ ver `AGENTS.md`, sección 12).
   - Línea base del bundle para la Fase 7: el build queda en ~891 KB (267 KB gzip) con el aviso de
     chunks > 500 KB; la optimización se hará en el pulido, como se indicó en AGENTS.md.
 - **Intervención de Carlos Eduardo (Intervención humana):**
+  - Revisé y validé por mi cuenta la información y los resultados que reportó la IA, sin darlos
+    por buenos solo porque ella los diera por correctos.
+  - Encontré datos que no se estaban validando bien. Por ejemplo, si en un input se escribía
+    "2" GB de RAM y luego se borraba, el manejo de errores mostraba un `null` y el usuario no
+    sabía por qué no le dejaba guardar. Se corrigió para que el mensaje indique claramente que
+    falta diligenciar el dato (el ajuste de mensajes también quedó registrado en «Post-Fase 7»).
+  - La validación bloqueaba los números negativos (correcto), pero sí permitía guardar el valor 0;
+    eso también se corrigió.
 - **Prompt clave (opcional):** «Siguiente fase».
 
 ## Fase 6 — Realtime
@@ -173,6 +201,8 @@ ver `AGENTS.md`, sección 12).
     Vite** (rechazo sin cookie, conexión autenticada y los tres eventos verificados).
   - Bundle tras la fase: 933 KB (281 KB gzip); sigue pendiente la optimización de la Fase 7.
 - **Intervención de Carlos Eduardo (Intervención humana):**
+  - Revisé y validé por mi cuenta la información y los resultados que reportó la IA, sin darlos
+    por buenos solo porque ella los diera por correctos.
 - **Prompt clave (opcional):** «vamos con el siguiente paso».
 
 ## Fase 7 — Pulido y documentación
@@ -192,6 +222,11 @@ ver `AGENTS.md`, sección 12).
   - Verificación final: lint, typecheck, 54 tests, format y build en verde; smoke con el stack
     completo (SPA + login + /api/vms + módulos en dev) tras los cambios.
 - **Intervención de Carlos Eduardo (Intervención humana):**
+  - Revisé y validé por mi cuenta la información y los resultados que reportó la IA, sin darlos
+    por buenos solo porque ella los diera por correctos.
+  - Aunque la IA sí entregó la documentación (`README.md` y `docs/architecture.md`), el código
+    Mermaid del diagrama tenía errores. La arquitectura que representaba sí era correcta; los
+    errores estaban en el código del diagrama, que fue necesario corregir.
 - **Prompt clave (opcional):** «Pasemos a la fase 7».
 
 ## Post-Fase 7 — Ajustes de la revisión de Carlos
@@ -214,11 +249,12 @@ ver `AGENTS.md`, sección 12).
   - 4 tests nuevos (3 del modal — incluida la validación en español — y los mensajes de esquema);
     suite total: 58 tests. Build sin advertencias (25 chunks, el mayor 312 KB).
 - **Intervención de Carlos Eduardo (Intervención humana):**
-- **Prompt clave (opcional):** «Hay algunos fallos, cuando quito del input vCPU se ve el siguiente
-  texto: nvalid input: expected number, received NaN, eso pasa con más inputs, al darle crear VM,
-  me gustaría que funcionara más como una ventana modal con su respectiva transición, cuando paso
-  el mouse sobre algunos botones no se ve bien el cursor pointer, cuando voy a crear una VM y se
-  desactiva el botón por falta de datos debería aparecer el cursor-blocked de tailwind.»
+  - Revisé y validé por mi cuenta la información y los resultados que reportó la IA, sin darlos
+    por buenos solo porque ella los diera por correctos.
+  - Estos ajustes salen de mi propia revisión manual del producto: detecté los problemas
+    (mensajes de validación, comportamiento del formulario y cursores) y se los pedí al agente.
+    Después validé que el resultado quedara como se esperaba.
+- **Prompt clave (opcional):** «Siguiente fase»
 
 ## Marca IFX — nombre y sistema de diseño
 
@@ -238,6 +274,9 @@ ver `AGENTS.md`, sección 12).
   - Verificación: lint, typecheck, 59 tests, format y build en verde (el build copia
     `public/brand/` y el favicon queda referenciado).
 - **Intervención de Carlos Eduardo (Intervención humana):**
+  - Revisé y validé por mi cuenta la información y los resultados que reportó la IA, sin darlos
+    por buenos solo porque ella los diera por correctos.
+  - Aporté el logo de IFX y pedí también el cambio del nombre de la página a «IFX VM Manager».
 - **Prompt clave (opcional):** «Lee AGENTS.md, sección 9, bloque "Identidad de marca (IFX)", y la
   tabla de tokens actualizada. Los logos ya están en apps/web/public/brand/. Tarea: aplicar la
   identidad de marca.» (y «Cambia el nombre de la página por IFX VM Manager»).
@@ -252,7 +291,9 @@ ver `AGENTS.md`, sección 12).
   - Los placeholders (buscador y campos de formulario) pasan de `--text-secondary` al 70 % de
     opacidad a opacidad completa, para cumplir contraste AA en claro y oscuro.
 - **Intervención de Carlos Eduardo (Intervención humana):**
-- **Prompt clave (opcional):** «No se ve bien el Buscar por nombre... en el modo light».
+  - Revisé y validé por mi cuenta la información y los resultados que reportó la IA, sin darlos
+    por buenos solo porque ella los diera por correctos.
+- **Prompt clave (opcional):** «Siguiente fase».
 
 ## Splash de marca — logo que se llena de color
 
@@ -275,8 +316,10 @@ ver `AGENTS.md`, sección 12).
   - 3 tests del componente (role/aria, las dos capas por tema y el estado invisible previo al
     retraso), sin tocar el resto de tests; suite total: 62 tests.
 - **Intervención de Carlos Eduardo (Intervención humana):**
+  - Revisé y validé por mi cuenta la información y los resultados que reportó la IA, sin darlos
+    por buenos solo porque ella los diera por correctos.
 - **Prompt clave (opcional):** «Lee AGENTS.md, sección 9, bloque "Pantalla de carga (splash) de
-  marca". Tarea: implementar el SplashScreen con el efecto de logo llenándose de color.»
+  marca".»
 
 ## Correcciones de la revisión (seguridad y rendimiento)
 
@@ -301,6 +344,11 @@ ver `AGENTS.md`, sección 12).
     memoria, `trustProxy`, `GET /vms` sin paginación).
   - Verificación: lint, typecheck, 71 tests, format y build en verde.
 - **Intervención de Carlos Eduardo (Intervención humana):**
+  - Fui yo quien se dio cuenta de que hacía falta revisar y corregir temas de seguridad y
+    rendimiento, y le pedí al agente que me ayudara a corregirlos.
+  - Después de la corrección validé el resultado y comprobé que el agente había implementado los
+    cambios de manera correcta.
+  - Revisé y validé por mi cuenta la información que reportó la IA en esta entrada.
 - **Prompt clave (opcional):** «Aplica estas correcciones de la revisión de seguridad y
   rendimiento, en este orden: …» (5 puntos; sin dependencias nuevas y sin import dinámico de
   socket.io-client).
